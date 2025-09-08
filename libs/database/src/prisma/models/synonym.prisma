@@ -1,0 +1,6 @@
+model Synonym {
+  synonymId        String     @id @default(uuid())
+  word      String
+  meaningId String
+  meaning   Meaning @relation(fields: [meaningId], references: [meaningId])
+}

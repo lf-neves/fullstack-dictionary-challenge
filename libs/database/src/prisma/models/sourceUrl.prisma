@@ -1,0 +1,6 @@
+model SourceUrl {
+  sourceUrlId     String   @id @default(uuid())
+  url    String
+  wordId String
+  word   Word  @relation(fields: [wordId], references: [wordId])
+}

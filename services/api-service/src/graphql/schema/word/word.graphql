@@ -1,0 +1,46 @@
+enum WordStatus {
+  ACTIVE
+  INACTIVE
+}
+
+type Word {
+  wordId: ID!
+  word: String!
+  isFavorite: Boolean!
+  status: WordStatus!
+}
+
+input WordsInput {
+  isFavorite: Boolean
+  page: Int
+  limit: Int
+}
+
+input CreateWordInput {
+  word: String!
+  isFavorite: Boolean
+}
+
+input UpdateWordInput {
+  wordId: ID!
+  word: String
+  isFavorite: Boolean
+}
+
+extend type Query {
+  word(wordId: ID!): Word!
+  words(input: WordsInput): [Word]!
+}
+
+type WordMutationResponse implements MutationResponse {
+  code: String!
+  success: Boolean!
+  message: String!
+  word: Word!
+}
+
+extend type Mutation {
+  createWord(input: CreateWordInput!): WordMutationResponse!
+  updateWord(input: UpdateWordInput!): WordMutationResponse!
+  deleteWord(wordId: ID!): MutationResponse!
+}

@@ -1,0 +1,17 @@
+enum WordStatus {
+  ACTIVE
+  INACTIVE
+}
+
+model Word {
+  wordId         String        @id @default(uuid())
+  word       String     @unique
+  isFavorite Boolean
+  phonetics  Phonetic[]
+  meanings   Meaning[]
+  licenseId  String?
+  license    License?   @relation(fields: [licenseId], references: [licenseId])
+  sourceUrls SourceUrl[]
+  status     WordStatus @default(ACTIVE)
+  createdAt  DateTime   @default(now())
+}

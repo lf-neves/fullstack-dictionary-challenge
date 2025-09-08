@@ -1,0 +1,8 @@
+mutation AuthenticateUser($input: AuthenticateUserInput!) {
+  authenticateUser(input: $input) {
+    token
+    user {
+      userId
+    }
+  }
+}

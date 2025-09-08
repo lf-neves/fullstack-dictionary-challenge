@@ -1,0 +1,7 @@
+model License {
+  licenseId   String    @id @default(uuid())
+  name String
+  url  String
+  words     Word[]
+  phonetics Phonetic[]
+}

@@ -1,0 +1,9 @@
+model Meaning {
+  meaningId          String          @id @default(uuid())
+  partOfSpeech String
+  wordId      String
+  word        Word         @relation(fields: [wordId], references: [wordId])
+  definitions Definition[]
+  synonyms    Synonym[]
+  antonyms    Antonym[]
+}

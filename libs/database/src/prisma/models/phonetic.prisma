@@ -1,0 +1,10 @@
+model Phonetic {
+  phoneticId        String      @id @default(uuid())
+  text      String?
+  audio     String
+  sourceUrl String?
+  wordId    String
+  word      Word     @relation(fields: [wordId], references: [wordId])
+  licenseId String?
+  license   License? @relation(fields: [licenseId], references: [licenseId])
+}

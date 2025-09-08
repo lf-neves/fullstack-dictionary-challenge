@@ -1,0 +1,22 @@
+{
+  "name": "lambda",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "loglevel": "^1.9.2",
+    "p-map": "^7.0.3"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.17.19",
+    "@types/node": "^24.3.0"
+  }
+}

@@ -1,0 +1,101 @@
+model Antonym {
+  antonymId String  @id @default(uuid())
+  word      String
+  meaningId String
+  meaning   Meaning @relation(fields: [meaningId], references: [meaningId])
+}
+
+model Definition {
+  definitionId String  @id @default(uuid())
+  definition   String
+  example      String?
+  meaningId    String
+  meaning      Meaning @relation(fields: [meaningId], references: [meaningId])
+}
+
+model License {
+  licenseId String     @id @default(uuid())
+  name      String
+  url       String
+  words     Word[]
+  phonetics Phonetic[]
+}
+
+model Meaning {
+  meaningId    String       @id @default(uuid())
+  partOfSpeech String
+  wordId       String
+  word         Word         @relation(fields: [wordId], references: [wordId])
+  definitions  Definition[]
+  synonyms     Synonym[]
+  antonyms     Antonym[]
+}
+
+model Phonetic {
+  phoneticId String   @id @default(uuid())
+  text       String?
+  audio      String
+  sourceUrl  String?
+  wordId     String
+  word       Word     @relation(fields: [wordId], references: [wordId])
+  licenseId  String?
+  license    License? @relation(fields: [licenseId], references: [licenseId])
+}
+
+model SourceUrl {
+  sourceUrlId String @id @default(uuid())
+  url         String
+  wordId      String
+  word        Word   @relation(fields: [wordId], references: [wordId])
+}
+
+model Synonym {
+  synonymId String  @id @default(uuid())
+  word      String
+  meaningId String
+  meaning   Meaning @relation(fields: [meaningId], references: [meaningId])
+}
+
+model User {
+  userId    String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  firstName String
+  lastName  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum WordStatus {
+  ACTIVE
+  INACTIVE
+}
+
+model Word {
+  wordId     String      @id @default(uuid())
+  word       String      @unique
+  isFavorite Boolean
+  phonetics  Phonetic[]
+  meanings   Meaning[]
+  licenseId  String?
+  license    License?    @relation(fields: [licenseId], references: [licenseId])
+  sourceUrls SourceUrl[]
+  status     WordStatus  @default(ACTIVE)
+  createdAt  DateTime    @default(now())
+}
+
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
