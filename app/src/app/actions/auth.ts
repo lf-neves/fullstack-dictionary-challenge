@@ -1,11 +1,7 @@
 "use server";
 
-import {
-  GraphQLAuthenticateUserMutation,
-  GraphQLAuthenticateUserMutationVariables,
-} from "@/typings/graphql/codegen/graphqlOperations";
-import { gqlFetcher } from "../api/client/graphql";
-import { createSession } from "../libs/session";
+import { AuthenticateUserDocument } from "@/typings/graphql/codegen/graphqlOperations";
+import { createSession, deleteSession } from "../libs/session";
 import { redirect } from "next/navigation";
 
 export type LoginFormState =
@@ -19,23 +15,16 @@ export type LoginFormState =
   | undefined;
 
 export async function login(formData: { email: string; password: string }) {
-  const query = `
-        mutation AuthenticateUser($input: AuthenticateUserInput!) {
-            authenticateUser(input: $input) {
-                token
-            }
-        }
-      `;
-
   const { email, password } = formData;
-  const graphqlResponse = gqlFetcher<
-    GraphQLAuthenticateUserMutation,
-    GraphQLAuthenticateUserMutationVariables
-  >(query, {
-    input: { email, password },
+  const res = await fetch("http://localhost:3000/api/endpoints/graphql", {
+    method: "POST",
+    body: JSON.stringify({
+      query: AuthenticateUserDocument,
+      variables: { input: { email, password } },
+    }),
   });
 
-  const data = await graphqlResponse();
+  const { data } = await res.json();
   const { token } = data?.authenticateUser || {};
 
   if (!token) {
@@ -44,5 +33,11 @@ export async function login(formData: { email: string; password: string }) {
 
   await createSession(token);
 
-  redirect("/");
+  redirect("/word");
+}
+
+export async function logout() {
+  await deleteSession();
+
+  redirect("/login");
 }

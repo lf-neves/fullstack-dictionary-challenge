@@ -1,0 +1,8 @@
+query Words($input: WordsInput) {
+  words(input: $input) {
+    wordId
+    word
+    isFavorite
+    status
+  }
+}

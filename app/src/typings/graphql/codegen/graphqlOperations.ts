@@ -157,6 +157,20 @@ export type GraphQLMeQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GraphQLMeQuery = { __typename?: 'Query', me?: { __typename?: 'User', userId: string, email?: string | null, firstName?: string | null, lastName?: string | null } | null };
 
+export type GraphQLUpdateWordMutationVariables = Exact<{
+  input: GraphQLUpdateWordInput;
+}>;
+
+
+export type GraphQLUpdateWordMutation = { __typename?: 'Mutation', updateWord: { __typename?: 'WordMutationResponse', word: { __typename?: 'Word', wordId: string, word: string, isFavorite: boolean, status: GraphQLWordStatus } } };
+
+export type GraphQLWordsQueryVariables = Exact<{
+  input?: InputMaybe<GraphQLWordsInput>;
+}>;
+
+
+export type GraphQLWordsQuery = { __typename?: 'Query', words: Array<{ __typename?: 'Word', wordId: string, word: string, isFavorite: boolean, status: GraphQLWordStatus } | null> };
+
 
 
 export const AuthenticateUserDocument = `
@@ -226,11 +240,82 @@ export const useSuspenseMeQuery = <
   }
     )};
 
+export const UpdateWordDocument = `
+    mutation UpdateWord($input: UpdateWordInput!) {
+  updateWord(input: $input) {
+    word {
+      wordId
+      word
+      isFavorite
+      status
+    }
+  }
+}
+    `;
+
+export const useUpdateWordMutation = <
+      TError = ReactQueryError,
+      TContext = unknown
+    >(options?: UseMutationOptions<GraphQLUpdateWordMutation, TError, GraphQLUpdateWordMutationVariables, TContext>) => {
+    
+    return useMutation<GraphQLUpdateWordMutation, TError, GraphQLUpdateWordMutationVariables, TContext>(
+      {
+    mutationKey: ['UpdateWord'],
+    mutationFn: (variables?: GraphQLUpdateWordMutationVariables) => gqlFetcher<GraphQLUpdateWordMutation, GraphQLUpdateWordMutationVariables>(UpdateWordDocument, variables)(),
+    ...options
+  }
+    )};
+
+export const WordsDocument = `
+    query Words($input: WordsInput) {
+  words(input: $input) {
+    wordId
+    word
+    isFavorite
+    status
+  }
+}
+    `;
+
+export const useWordsQuery = <
+      TData = GraphQLWordsQuery,
+      TError = ReactQueryError
+    >(
+      variables?: GraphQLWordsQueryVariables,
+      options?: Omit<UseQueryOptions<GraphQLWordsQuery, TError, TData>, 'queryKey'> & { queryKey?: UseQueryOptions<GraphQLWordsQuery, TError, TData>['queryKey'] }
+    ) => {
+    
+    return useQuery<GraphQLWordsQuery, TError, TData>(
+      {
+    queryKey: variables === undefined ? ['Words'] : ['Words', variables],
+    queryFn: gqlFetcher<GraphQLWordsQuery, GraphQLWordsQueryVariables>(WordsDocument, variables),
+    ...options
+  }
+    )};
+
+export const useSuspenseWordsQuery = <
+      TData = GraphQLWordsQuery,
+      TError = ReactQueryError
+    >(
+      variables?: GraphQLWordsQueryVariables,
+      options?: Omit<UseSuspenseQueryOptions<GraphQLWordsQuery, TError, TData>, 'queryKey'> & { queryKey?: UseSuspenseQueryOptions<GraphQLWordsQuery, TError, TData>['queryKey'] }
+    ) => {
+    
+    return useSuspenseQuery<GraphQLWordsQuery, TError, TData>(
+      {
+    queryKey: variables === undefined ? ['WordsSuspense'] : ['WordsSuspense', variables],
+    queryFn: gqlFetcher<GraphQLWordsQuery, GraphQLWordsQueryVariables>(WordsDocument, variables),
+    ...options
+  }
+    )};
+
 export const namedOperations = {
   Query: {
-    Me: 'Me'
+    Me: 'Me',
+    Words: 'Words'
   },
   Mutation: {
-    AuthenticateUser: 'AuthenticateUser'
+    AuthenticateUser: 'AuthenticateUser',
+    UpdateWord: 'UpdateWord'
   }
 }

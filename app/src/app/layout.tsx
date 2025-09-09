@@ -1,24 +1,21 @@
-"use client";
-
-import React from "react";
-import { CssBaseline } from "@mui/material";
+import { Box, CssBaseline } from "@mui/material";
 import { ApolloWrapper } from "./ApolloWrapper";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientWrapper } from "./QueryClientWrapper";
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const queryClient = new QueryClient();
-
   return (
     <html lang="en">
       <body>
         <CssBaseline />
-        <QueryClientProvider client={queryClient}>
-          <ApolloWrapper>{children}</ApolloWrapper>
-        </QueryClientProvider>
+        <ApolloWrapper>
+          <QueryClientWrapper>
+            <Box>{children}</Box>
+          </QueryClientWrapper>
+        </ApolloWrapper>
       </body>
     </html>
   );

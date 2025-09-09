@@ -1,0 +1,10 @@
+mutation UpdateWord($input: UpdateWordInput!) {
+  updateWord(input: $input) {
+    word {
+      wordId
+      word
+      isFavorite
+      status
+    }
+  }
+}

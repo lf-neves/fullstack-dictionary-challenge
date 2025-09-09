@@ -18,11 +18,16 @@ export const wordResolvers: GraphQLResolvers = {
       return word;
     },
     words: async (_parent, { input }) => {
+      const { isFavorite, page, limit } = input || {};
+      const pageSize = limit ?? 10;
+
       return prismaClient.word.findMany({
         where: {
-          isFavorite: input?.isFavorite ?? undefined,
+          isFavorite: isFavorite ?? undefined,
           status: "ACTIVE",
         },
+        skip: (page ?? 0) * pageSize,
+        take: pageSize,
       });
     },
   },
@@ -55,6 +60,12 @@ export const wordResolvers: GraphQLResolvers = {
         Object.entries(wordAttributesToUpdate).filter(
           ([, value]) => value !== null
         )
+      );
+
+      logger.info(
+        "Will update Word[%s] with %o.",
+        wordId,
+        wordAttributesToUpdate
       );
 
       const updatedWord = await prismaClient.word.update({

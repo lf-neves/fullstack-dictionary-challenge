@@ -14,6 +14,7 @@ export async function POST(req: Request) {
         ...(token ? { authorization: `Bearer ${token}` } : {}),
       },
       body: JSON.stringify(body),
+      credentials: "include",
     });
 
     const data = await res.json();
