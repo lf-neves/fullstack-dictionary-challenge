@@ -1,0 +1,10 @@
+query userVisitedWordsHistory {
+  userVisitedWordsHistory {
+    userWordHistoryId
+    word {
+      wordId
+      word
+    }
+    lastVisitedAt
+  }
+}

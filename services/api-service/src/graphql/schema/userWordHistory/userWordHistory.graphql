@@ -1,0 +1,17 @@
+type UserWordHistory {
+  userWordHistoryId: ID!
+  word: Word!
+  lastVisitedAt: DateTime!
+}
+
+input TrackWordVisitHistoryInput {
+  wordId: ID!
+}
+
+extend type Query {
+  userVisitedWordsHistory: [UserWordHistory!]!
+}
+
+extend type Mutation {
+  trackWordVisitHistory(input: TrackWordVisitHistoryInput!): MutationResponse!
+}

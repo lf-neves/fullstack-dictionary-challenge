@@ -4,5 +4,13 @@ query Me {
     email
     firstName
     lastName
+    userWordHistory {
+      userWordHistoryId
+      word {
+        wordId
+        word
+      }
+      lastVisitedAt
+    }
   }
 }

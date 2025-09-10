@@ -12,6 +12,7 @@ model Word {
   licenseId  String?
   license    License?   @relation(fields: [licenseId], references: [licenseId])
   sourceUrls SourceUrl[]
+  history UserWordHistory[]
   status     WordStatus @default(ACTIVE)
   createdAt  DateTime   @default(now())
 }

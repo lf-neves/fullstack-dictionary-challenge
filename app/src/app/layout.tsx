@@ -1,6 +1,8 @@
 import { Box, CssBaseline } from "@mui/material";
 import { ApolloWrapper } from "./ApolloWrapper";
 import { QueryClientWrapper } from "./QueryClientWrapper";
+import Navbar from "../components/Navbar";
+import { SessionProvider } from "./SessionProvider";
 
 export default function RootLayout({
   children,
@@ -13,7 +15,10 @@ export default function RootLayout({
         <CssBaseline />
         <ApolloWrapper>
           <QueryClientWrapper>
-            <Box>{children}</Box>
+            <SessionProvider>
+              <Navbar />
+              <Box>{children}</Box>
+            </SessionProvider>
           </QueryClientWrapper>
         </ApolloWrapper>
       </body>

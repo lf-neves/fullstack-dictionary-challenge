@@ -54,6 +54,7 @@ export interface GraphQLMutation {
   createUser?: Maybe<GraphQLAuthPayload>;
   createWord: GraphQLWordMutationResponse;
   deleteWord: GraphQLMutationResponse;
+  trackWordVisitHistory: GraphQLMutationResponse;
   updateWord: GraphQLWordMutationResponse;
 }
 
@@ -78,6 +79,11 @@ export interface GraphQLMutationDeleteWordArgs {
 }
 
 
+export interface GraphQLMutationTrackWordVisitHistoryArgs {
+  input: GraphQLTrackWordVisitHistoryInput;
+}
+
+
 export interface GraphQLMutationUpdateWordArgs {
   input: GraphQLUpdateWordInput;
 }
@@ -88,9 +94,19 @@ export interface GraphQLMutationResponse {
   success: Scalars['Boolean']['output'];
 }
 
+export interface GraphQLPhonetic {
+  __typename?: 'Phonetic';
+  audio: Scalars['String']['output'];
+  phoneticId: Scalars['ID']['output'];
+  sourceUrl: Scalars['String']['output'];
+  text: Scalars['String']['output'];
+  wordId: Scalars['ID']['output'];
+}
+
 export interface GraphQLQuery {
   __typename?: 'Query';
   me?: Maybe<GraphQLUser>;
+  userVisitedWordsHistory: Array<GraphQLUserWordHistory>;
   word: GraphQLWord;
   words: Array<Maybe<GraphQLWord>>;
 }
@@ -105,6 +121,10 @@ export interface GraphQLQueryWordsArgs {
   input?: InputMaybe<GraphQLWordsInput>;
 }
 
+export interface GraphQLTrackWordVisitHistoryInput {
+  wordId: Scalars['ID']['input'];
+}
+
 export interface GraphQLUpdateWordInput {
   isFavorite?: InputMaybe<Scalars['Boolean']['input']>;
   word?: InputMaybe<Scalars['String']['input']>;
@@ -117,11 +137,20 @@ export interface GraphQLUser {
   firstName?: Maybe<Scalars['String']['output']>;
   lastName?: Maybe<Scalars['String']['output']>;
   userId: Scalars['ID']['output'];
+  userWordHistory: Array<GraphQLUserWordHistory>;
+}
+
+export interface GraphQLUserWordHistory {
+  __typename?: 'UserWordHistory';
+  lastVisitedAt: Scalars['DateTime']['output'];
+  userWordHistoryId: Scalars['ID']['output'];
+  word: GraphQLWord;
 }
 
 export interface GraphQLWord {
   __typename?: 'Word';
   isFavorite: Scalars['Boolean']['output'];
+  phonetic: GraphQLPhonetic;
   status: GraphQLWordStatus;
   word: Scalars['String']['output'];
   wordId: Scalars['ID']['output'];
@@ -237,12 +266,15 @@ export type GraphQLResolversTypes = {
   NonEmptyString: ResolverTypeWrapper<Scalars['NonEmptyString']['output']>;
   NonNegativeInt: ResolverTypeWrapper<Scalars['NonNegativeInt']['output']>;
   NonPositiveInt: ResolverTypeWrapper<Scalars['NonPositiveInt']['output']>;
+  Phonetic: ResolverTypeWrapper<GraphQLPhonetic>;
   PositiveInt: ResolverTypeWrapper<Scalars['PositiveInt']['output']>;
   Query: ResolverTypeWrapper<{}>;
   SafeInt: ResolverTypeWrapper<Scalars['SafeInt']['output']>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  TrackWordVisitHistoryInput: GraphQLTrackWordVisitHistoryInput;
   UpdateWordInput: GraphQLUpdateWordInput;
   User: ResolverTypeWrapper<GraphQLUser>;
+  UserWordHistory: ResolverTypeWrapper<GraphQLUserWordHistory>;
   Word: ResolverTypeWrapper<GraphQLWord>;
   WordMutationResponse: ResolverTypeWrapper<GraphQLWordMutationResponse>;
   WordStatus: GraphQLWordStatus;
@@ -267,12 +299,15 @@ export type GraphQLResolversParentTypes = {
   NonEmptyString: Scalars['NonEmptyString']['output'];
   NonNegativeInt: Scalars['NonNegativeInt']['output'];
   NonPositiveInt: Scalars['NonPositiveInt']['output'];
+  Phonetic: GraphQLPhonetic;
   PositiveInt: Scalars['PositiveInt']['output'];
   Query: {};
   SafeInt: Scalars['SafeInt']['output'];
   String: Scalars['String']['output'];
+  TrackWordVisitHistoryInput: GraphQLTrackWordVisitHistoryInput;
   UpdateWordInput: GraphQLUpdateWordInput;
   User: GraphQLUser;
+  UserWordHistory: GraphQLUserWordHistory;
   Word: GraphQLWord;
   WordMutationResponse: GraphQLWordMutationResponse;
   WordsInput: GraphQLWordsInput;
@@ -305,6 +340,7 @@ export type GraphQLMutationResolvers<ContextType = any, ParentType extends Graph
   createUser?: Resolver<Maybe<GraphQLResolversTypes['AuthPayload']>, ParentType, ContextType, RequireFields<GraphQLMutationCreateUserArgs, 'input'>>;
   createWord?: Resolver<GraphQLResolversTypes['WordMutationResponse'], ParentType, ContextType, RequireFields<GraphQLMutationCreateWordArgs, 'input'>>;
   deleteWord?: Resolver<GraphQLResolversTypes['MutationResponse'], ParentType, ContextType, RequireFields<GraphQLMutationDeleteWordArgs, 'wordId'>>;
+  trackWordVisitHistory?: Resolver<GraphQLResolversTypes['MutationResponse'], ParentType, ContextType, RequireFields<GraphQLMutationTrackWordVisitHistoryArgs, 'input'>>;
   updateWord?: Resolver<GraphQLResolversTypes['WordMutationResponse'], ParentType, ContextType, RequireFields<GraphQLMutationUpdateWordArgs, 'input'>>;
 };
 
@@ -327,12 +363,22 @@ export interface GraphQLNonPositiveIntScalarConfig extends GraphQLScalarTypeConf
   name: 'NonPositiveInt';
 }
 
+export type GraphQLPhoneticResolvers<ContextType = any, ParentType extends GraphQLResolversParentTypes['Phonetic'] = GraphQLResolversParentTypes['Phonetic']> = {
+  audio?: Resolver<GraphQLResolversTypes['String'], ParentType, ContextType>;
+  phoneticId?: Resolver<GraphQLResolversTypes['ID'], ParentType, ContextType>;
+  sourceUrl?: Resolver<GraphQLResolversTypes['String'], ParentType, ContextType>;
+  text?: Resolver<GraphQLResolversTypes['String'], ParentType, ContextType>;
+  wordId?: Resolver<GraphQLResolversTypes['ID'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export interface GraphQLPositiveIntScalarConfig extends GraphQLScalarTypeConfig<GraphQLResolversTypes['PositiveInt'], any> {
   name: 'PositiveInt';
 }
 
 export type GraphQLQueryResolvers<ContextType = any, ParentType extends GraphQLResolversParentTypes['Query'] = GraphQLResolversParentTypes['Query']> = {
   me?: Resolver<Maybe<GraphQLResolversTypes['User']>, ParentType, ContextType>;
+  userVisitedWordsHistory?: Resolver<Array<GraphQLResolversTypes['UserWordHistory']>, ParentType, ContextType>;
   word?: Resolver<GraphQLResolversTypes['Word'], ParentType, ContextType, RequireFields<GraphQLQueryWordArgs, 'wordId'>>;
   words?: Resolver<Array<Maybe<GraphQLResolversTypes['Word']>>, ParentType, ContextType, Partial<GraphQLQueryWordsArgs>>;
 };
@@ -346,11 +392,20 @@ export type GraphQLUserResolvers<ContextType = any, ParentType extends GraphQLRe
   firstName?: Resolver<Maybe<GraphQLResolversTypes['String']>, ParentType, ContextType>;
   lastName?: Resolver<Maybe<GraphQLResolversTypes['String']>, ParentType, ContextType>;
   userId?: Resolver<GraphQLResolversTypes['ID'], ParentType, ContextType>;
+  userWordHistory?: Resolver<Array<GraphQLResolversTypes['UserWordHistory']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type GraphQLUserWordHistoryResolvers<ContextType = any, ParentType extends GraphQLResolversParentTypes['UserWordHistory'] = GraphQLResolversParentTypes['UserWordHistory']> = {
+  lastVisitedAt?: Resolver<GraphQLResolversTypes['DateTime'], ParentType, ContextType>;
+  userWordHistoryId?: Resolver<GraphQLResolversTypes['ID'], ParentType, ContextType>;
+  word?: Resolver<GraphQLResolversTypes['Word'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type GraphQLWordResolvers<ContextType = any, ParentType extends GraphQLResolversParentTypes['Word'] = GraphQLResolversParentTypes['Word']> = {
   isFavorite?: Resolver<GraphQLResolversTypes['Boolean'], ParentType, ContextType>;
+  phonetic?: Resolver<GraphQLResolversTypes['Phonetic'], ParentType, ContextType>;
   status?: Resolver<GraphQLResolversTypes['WordStatus'], ParentType, ContextType>;
   word?: Resolver<GraphQLResolversTypes['String'], ParentType, ContextType>;
   wordId?: Resolver<GraphQLResolversTypes['ID'], ParentType, ContextType>;
@@ -376,10 +431,12 @@ export type GraphQLResolvers<ContextType = any> = {
   NonEmptyString?: GraphQLScalarType;
   NonNegativeInt?: GraphQLScalarType;
   NonPositiveInt?: GraphQLScalarType;
+  Phonetic?: GraphQLPhoneticResolvers<ContextType>;
   PositiveInt?: GraphQLScalarType;
   Query?: GraphQLQueryResolvers<ContextType>;
   SafeInt?: GraphQLScalarType;
   User?: GraphQLUserResolvers<ContextType>;
+  UserWordHistory?: GraphQLUserWordHistoryResolvers<ContextType>;
   Word?: GraphQLWordResolvers<ContextType>;
   WordMutationResponse?: GraphQLWordMutationResponseResolvers<ContextType>;
 };

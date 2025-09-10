@@ -1,0 +1,7 @@
+type Phonetic {
+  phoneticId: ID!
+  text: String!
+  audio: String!
+  sourceUrl: String!
+  wordId: ID!
+}

@@ -1,0 +1,5 @@
+mutation TrackWordVisitHistory($input: TrackWordVisitHistoryInput!) {
+  trackWordVisitHistory(input: $input) {
+    success
+  }
+}

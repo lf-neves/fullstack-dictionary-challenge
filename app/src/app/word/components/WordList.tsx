@@ -3,7 +3,7 @@ import { Box, Button, Grid, Typography } from "@mui/material";
 
 interface WordListProps {
   words: (GraphQLWord | null)[];
-  setSelectedWord: (word: GraphQLWord) => void;
+  setSelectedWord: (word: GraphQLWord) => Promise<void>;
 }
 
 export function WordList({ words, setSelectedWord }: WordListProps) {
@@ -30,7 +30,9 @@ export function WordList({ words, setSelectedWord }: WordListProps) {
               size="small"
               style={{ color: "black" }}
               variant="text"
-              onClick={() => setSelectedWord(word)}
+              onClick={async () => {
+                await setSelectedWord(word);
+              }}
             >
               {word.word}
             </Button>

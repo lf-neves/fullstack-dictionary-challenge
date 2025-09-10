@@ -54,6 +54,7 @@ export interface GraphQLMutation {
   createUser?: Maybe<GraphQLAuthPayload>;
   createWord: GraphQLWordMutationResponse;
   deleteWord: GraphQLMutationResponse;
+  trackWordVisitHistory: GraphQLMutationResponse;
   updateWord: GraphQLWordMutationResponse;
 }
 
@@ -78,6 +79,11 @@ export interface GraphQLMutationDeleteWordArgs {
 }
 
 
+export interface GraphQLMutationTrackWordVisitHistoryArgs {
+  input: GraphQLTrackWordVisitHistoryInput;
+}
+
+
 export interface GraphQLMutationUpdateWordArgs {
   input: GraphQLUpdateWordInput;
 }
@@ -88,9 +94,19 @@ export interface GraphQLMutationResponse {
   success: Scalars['Boolean']['output'];
 }
 
+export interface GraphQLPhonetic {
+  __typename?: 'Phonetic';
+  audio: Scalars['String']['output'];
+  phoneticId: Scalars['ID']['output'];
+  sourceUrl: Scalars['String']['output'];
+  text: Scalars['String']['output'];
+  wordId: Scalars['ID']['output'];
+}
+
 export interface GraphQLQuery {
   __typename?: 'Query';
   me?: Maybe<GraphQLUser>;
+  userVisitedWordsHistory: Array<GraphQLUserWordHistory>;
   word: GraphQLWord;
   words: Array<Maybe<GraphQLWord>>;
 }
@@ -105,6 +121,10 @@ export interface GraphQLQueryWordsArgs {
   input?: InputMaybe<GraphQLWordsInput>;
 }
 
+export interface GraphQLTrackWordVisitHistoryInput {
+  wordId: Scalars['ID']['input'];
+}
+
 export interface GraphQLUpdateWordInput {
   isFavorite?: InputMaybe<Scalars['Boolean']['input']>;
   word?: InputMaybe<Scalars['String']['input']>;
@@ -117,11 +137,20 @@ export interface GraphQLUser {
   firstName?: Maybe<Scalars['String']['output']>;
   lastName?: Maybe<Scalars['String']['output']>;
   userId: Scalars['ID']['output'];
+  userWordHistory: Array<GraphQLUserWordHistory>;
+}
+
+export interface GraphQLUserWordHistory {
+  __typename?: 'UserWordHistory';
+  lastVisitedAt: Scalars['DateTime']['output'];
+  userWordHistoryId: Scalars['ID']['output'];
+  word: GraphQLWord;
 }
 
 export interface GraphQLWord {
   __typename?: 'Word';
   isFavorite: Scalars['Boolean']['output'];
+  phonetic: GraphQLPhonetic;
   status: GraphQLWordStatus;
   word: Scalars['String']['output'];
   wordId: Scalars['ID']['output'];
@@ -155,7 +184,14 @@ export type GraphQLAuthenticateUserMutation = { __typename?: 'Mutation', authent
 export type GraphQLMeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GraphQLMeQuery = { __typename?: 'Query', me?: { __typename?: 'User', userId: string, email?: string | null, firstName?: string | null, lastName?: string | null } | null };
+export type GraphQLMeQuery = { __typename?: 'Query', me?: { __typename?: 'User', userId: string, email?: string | null, firstName?: string | null, lastName?: string | null, userWordHistory: Array<{ __typename?: 'UserWordHistory', userWordHistoryId: string, lastVisitedAt: string, word: { __typename?: 'Word', wordId: string, word: string } }> } | null };
+
+export type GraphQLTrackWordVisitHistoryMutationVariables = Exact<{
+  input: GraphQLTrackWordVisitHistoryInput;
+}>;
+
+
+export type GraphQLTrackWordVisitHistoryMutation = { __typename?: 'Mutation', trackWordVisitHistory: { __typename?: 'WordMutationResponse', success: boolean } };
 
 export type GraphQLUpdateWordMutationVariables = Exact<{
   input: GraphQLUpdateWordInput;
@@ -163,6 +199,18 @@ export type GraphQLUpdateWordMutationVariables = Exact<{
 
 
 export type GraphQLUpdateWordMutation = { __typename?: 'Mutation', updateWord: { __typename?: 'WordMutationResponse', word: { __typename?: 'Word', wordId: string, word: string, isFavorite: boolean, status: GraphQLWordStatus } } };
+
+export type GraphQLUserVisitedWordsHistoryQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GraphQLUserVisitedWordsHistoryQuery = { __typename?: 'Query', userVisitedWordsHistory: Array<{ __typename?: 'UserWordHistory', userWordHistoryId: string, lastVisitedAt: string, word: { __typename?: 'Word', wordId: string, word: string } }> };
+
+export type GraphQLWordQueryVariables = Exact<{
+  wordId: Scalars['ID'];
+}>;
+
+
+export type GraphQLWordQuery = { __typename?: 'Query', word: { __typename?: 'Word', wordId: string, word: string } };
 
 export type GraphQLWordsQueryVariables = Exact<{
   input?: InputMaybe<GraphQLWordsInput>;
@@ -204,6 +252,14 @@ export const MeDocument = `
     email
     firstName
     lastName
+    userWordHistory {
+      userWordHistoryId
+      word {
+        wordId
+        word
+      }
+      lastVisitedAt
+    }
   }
 }
     `;
@@ -240,6 +296,27 @@ export const useSuspenseMeQuery = <
   }
     )};
 
+export const TrackWordVisitHistoryDocument = `
+    mutation TrackWordVisitHistory($input: TrackWordVisitHistoryInput!) {
+  trackWordVisitHistory(input: $input) {
+    success
+  }
+}
+    `;
+
+export const useTrackWordVisitHistoryMutation = <
+      TError = ReactQueryError,
+      TContext = unknown
+    >(options?: UseMutationOptions<GraphQLTrackWordVisitHistoryMutation, TError, GraphQLTrackWordVisitHistoryMutationVariables, TContext>) => {
+    
+    return useMutation<GraphQLTrackWordVisitHistoryMutation, TError, GraphQLTrackWordVisitHistoryMutationVariables, TContext>(
+      {
+    mutationKey: ['TrackWordVisitHistory'],
+    mutationFn: (variables?: GraphQLTrackWordVisitHistoryMutationVariables) => gqlFetcher<GraphQLTrackWordVisitHistoryMutation, GraphQLTrackWordVisitHistoryMutationVariables>(TrackWordVisitHistoryDocument, variables)(),
+    ...options
+  }
+    )};
+
 export const UpdateWordDocument = `
     mutation UpdateWord($input: UpdateWordInput!) {
   updateWord(input: $input) {
@@ -262,6 +339,92 @@ export const useUpdateWordMutation = <
       {
     mutationKey: ['UpdateWord'],
     mutationFn: (variables?: GraphQLUpdateWordMutationVariables) => gqlFetcher<GraphQLUpdateWordMutation, GraphQLUpdateWordMutationVariables>(UpdateWordDocument, variables)(),
+    ...options
+  }
+    )};
+
+export const UserVisitedWordsHistoryDocument = `
+    query userVisitedWordsHistory {
+  userVisitedWordsHistory {
+    userWordHistoryId
+    word {
+      wordId
+      word
+    }
+    lastVisitedAt
+  }
+}
+    `;
+
+export const useUserVisitedWordsHistoryQuery = <
+      TData = GraphQLUserVisitedWordsHistoryQuery,
+      TError = ReactQueryError
+    >(
+      variables?: GraphQLUserVisitedWordsHistoryQueryVariables,
+      options?: Omit<UseQueryOptions<GraphQLUserVisitedWordsHistoryQuery, TError, TData>, 'queryKey'> & { queryKey?: UseQueryOptions<GraphQLUserVisitedWordsHistoryQuery, TError, TData>['queryKey'] }
+    ) => {
+    
+    return useQuery<GraphQLUserVisitedWordsHistoryQuery, TError, TData>(
+      {
+    queryKey: variables === undefined ? ['userVisitedWordsHistory'] : ['userVisitedWordsHistory', variables],
+    queryFn: gqlFetcher<GraphQLUserVisitedWordsHistoryQuery, GraphQLUserVisitedWordsHistoryQueryVariables>(UserVisitedWordsHistoryDocument, variables),
+    ...options
+  }
+    )};
+
+export const useSuspenseUserVisitedWordsHistoryQuery = <
+      TData = GraphQLUserVisitedWordsHistoryQuery,
+      TError = ReactQueryError
+    >(
+      variables?: GraphQLUserVisitedWordsHistoryQueryVariables,
+      options?: Omit<UseSuspenseQueryOptions<GraphQLUserVisitedWordsHistoryQuery, TError, TData>, 'queryKey'> & { queryKey?: UseSuspenseQueryOptions<GraphQLUserVisitedWordsHistoryQuery, TError, TData>['queryKey'] }
+    ) => {
+    
+    return useSuspenseQuery<GraphQLUserVisitedWordsHistoryQuery, TError, TData>(
+      {
+    queryKey: variables === undefined ? ['userVisitedWordsHistorySuspense'] : ['userVisitedWordsHistorySuspense', variables],
+    queryFn: gqlFetcher<GraphQLUserVisitedWordsHistoryQuery, GraphQLUserVisitedWordsHistoryQueryVariables>(UserVisitedWordsHistoryDocument, variables),
+    ...options
+  }
+    )};
+
+export const WordDocument = `
+    query Word($wordId: ID!) {
+  word(wordId: $wordId) {
+    wordId
+    word
+  }
+}
+    `;
+
+export const useWordQuery = <
+      TData = GraphQLWordQuery,
+      TError = ReactQueryError
+    >(
+      variables: GraphQLWordQueryVariables,
+      options?: Omit<UseQueryOptions<GraphQLWordQuery, TError, TData>, 'queryKey'> & { queryKey?: UseQueryOptions<GraphQLWordQuery, TError, TData>['queryKey'] }
+    ) => {
+    
+    return useQuery<GraphQLWordQuery, TError, TData>(
+      {
+    queryKey: ['Word', variables],
+    queryFn: gqlFetcher<GraphQLWordQuery, GraphQLWordQueryVariables>(WordDocument, variables),
+    ...options
+  }
+    )};
+
+export const useSuspenseWordQuery = <
+      TData = GraphQLWordQuery,
+      TError = ReactQueryError
+    >(
+      variables: GraphQLWordQueryVariables,
+      options?: Omit<UseSuspenseQueryOptions<GraphQLWordQuery, TError, TData>, 'queryKey'> & { queryKey?: UseSuspenseQueryOptions<GraphQLWordQuery, TError, TData>['queryKey'] }
+    ) => {
+    
+    return useSuspenseQuery<GraphQLWordQuery, TError, TData>(
+      {
+    queryKey: ['WordSuspense', variables],
+    queryFn: gqlFetcher<GraphQLWordQuery, GraphQLWordQueryVariables>(WordDocument, variables),
     ...options
   }
     )};
@@ -312,10 +475,13 @@ export const useSuspenseWordsQuery = <
 export const namedOperations = {
   Query: {
     Me: 'Me',
+    userVisitedWordsHistory: 'userVisitedWordsHistory',
+    Word: 'Word',
     Words: 'Words'
   },
   Mutation: {
     AuthenticateUser: 'AuthenticateUser',
+    TrackWordVisitHistory: 'TrackWordVisitHistory',
     UpdateWord: 'UpdateWord'
   }
 }

@@ -176,6 +176,13 @@ exports.Prisma.UserScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.UserWordHistoryScalarFieldEnum = {
+  userWordHistoryId: 'userWordHistoryId',
+  userId: 'userId',
+  wordId: 'wordId',
+  lastVisitedAt: 'lastVisitedAt'
+};
+
 exports.Prisma.WordScalarFieldEnum = {
   wordId: 'wordId',
   word: 'word',
@@ -213,6 +220,7 @@ exports.Prisma.ModelName = {
   SourceUrl: 'SourceUrl',
   Synonym: 'Synonym',
   User: 'User',
+  UserWordHistory: 'UserWordHistory',
   Word: 'Word'
 };
 

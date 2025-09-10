@@ -9,10 +9,10 @@ export function NavigationButtons({ onPrev, onNext }: NavigationButtonsProps) {
   return (
     <Box display="flex" justifyContent="space-between" mt={2}>
       <Button variant="outlined" onClick={onPrev}>
-        Voltar
+        Back
       </Button>
       <Button variant="outlined" onClick={onNext}>
-        Próximo
+        Next
       </Button>
     </Box>
   );

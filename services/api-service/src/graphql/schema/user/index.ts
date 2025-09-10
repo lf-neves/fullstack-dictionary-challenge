@@ -9,7 +9,18 @@ import { hashPassword } from "@/modules/hashPassword";
 export const userResolvers: GraphQLResolvers = {
   Query: {
     async me(_parent, _args, context) {
-      return context.user;
+      const userWithHistory = await prismaClient.user.findUnique({
+        where: { userId: context.user.userId },
+        include: {
+          history: true,
+        },
+      });
+
+      if (!userWithHistory) {
+        throw new Error("User not found.");
+      }
+
+      return userWithHistory;
     },
   },
 

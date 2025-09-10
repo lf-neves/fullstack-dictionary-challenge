@@ -1,0 +1,11 @@
+model UserWordHistory {
+  userWordHistoryId             String      @id @default(uuid())
+  user           User     @relation(fields: [userId], references: [userId])
+  userId         String
+  word           Word     @relation(fields: [wordId], references: [wordId])
+  wordId         String
+  lastVisitedAt  DateTime @default(now())
+
+  @@index([userId])
+  @@index([wordId])
+}

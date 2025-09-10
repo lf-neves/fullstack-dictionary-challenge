@@ -1,6 +1,7 @@
 "use client";
 
 import { logout } from "@/app/actions/auth";
+import { useCurrentUser } from "@/app/SessionProvider";
 import {
   Avatar,
   Box,
@@ -11,13 +12,8 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 
-export default function MenuOption({
-  firstName,
-  lastName,
-}: {
-  firstName: string;
-  lastName: string;
-}) {
+export default function MenuOption() {
+  const { currentUser } = useCurrentUser();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -39,7 +35,7 @@ export default function MenuOption({
             />
           </IconButton>
           <Typography variant="body1" sx={{ ml: 1, cursor: "pointer" }}>
-            {firstName} {lastName}
+            {currentUser?.firstName} {currentUser?.lastName}
           </Typography>
         </Box>
       </Box>

@@ -2,10 +2,10 @@
 
 import { AppBar, Toolbar, Typography } from "@mui/material";
 import MenuOption from "./MenuOption";
-import { useSuspenseMeQuery } from "@/typings/graphql/codegen/graphqlOperations";
+import { useCurrentUser } from "@/app/SessionProvider";
 
 export default function Navbar() {
-  const { data } = useSuspenseMeQuery();
+  const { isLoggedIn } = useCurrentUser();
 
   return (
     <AppBar position="static" sx={{ backgroundColor: "#1976d2" }}>
@@ -13,12 +13,7 @@ export default function Navbar() {
         <Typography variant="h6" fontWeight="bold">
           MyDictionary
         </Typography>
-        {data.me && (
-          <MenuOption
-            firstName={data.me.firstName ?? ""}
-            lastName={data.me.lastName ?? ""}
-          />
-        )}
+        {isLoggedIn && <MenuOption />}
       </Toolbar>
     </AppBar>
   );

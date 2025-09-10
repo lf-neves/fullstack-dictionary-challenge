@@ -8,8 +8,6 @@ export default async function middleware(req: NextRequest) {
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
 
-  console.log("Will check if user is authenticated. Token: ", token);
-
   if (!token && !unauthenticatedRoutes.includes(req.nextUrl.pathname)) {
     return NextResponse.redirect(new URL("/login", req.nextUrl));
   }

@@ -1,16 +1,19 @@
 "use client";
 
-import { useState } from "react";
-import { Container, Grid, Typography } from "@mui/material";
+import { useCallback, useState } from "react";
+import { Box, Container, Grid, Typography } from "@mui/material";
 import {
   GraphQLWord,
   useSuspenseWordsQuery,
+  useTrackWordVisitHistoryMutation,
 } from "@/typings/graphql/codegen/graphqlOperations";
 import { WordCard } from "./components/WordCard";
 import { MeaningSection } from "./components/MeaningSection";
 import { NavigationButtons } from "./components/NavigationButtons";
 import { TabsPanel } from "./components/TabsPanel";
 import { WordList } from "./components/WordList";
+import { VisitedWordsHistoryTable } from "./components/VisitedWordsHistoryTable";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function Word() {
   const { data: allWordsData } = useSuspenseWordsQuery(
@@ -40,8 +43,29 @@ export default function Word() {
   };
 
   const [currentTab, setCurrentTab] = useState<"all" | "favorites">("all");
-  const [selectedWord, setSelectedWord] = useState<GraphQLWord | null>(
+  const [selectedWord, setSelectedWordState] = useState<GraphQLWord | null>(
     listOfWordsBySelectedTabMap[currentTab][0] || null
+  );
+
+  const { mutateAsync: trackWordVisitHistory } =
+    useTrackWordVisitHistoryMutation();
+
+  const queryClient = useQueryClient();
+  const setSelectedWord = useCallback(
+    async (word: GraphQLWord) => {
+      await trackWordVisitHistory({
+        input: {
+          wordId: word.wordId,
+        },
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["userVisitedWordsHistorySuspense"],
+      });
+
+      setSelectedWordState(word);
+    },
+    [queryClient, setSelectedWordState, trackWordVisitHistory]
   );
 
   return (
@@ -53,38 +77,32 @@ export default function Word() {
             <Typography variant="body1">{`Verb - "${selectedWord?.word}" or an equivalent greeting.`}</Typography>
           </MeaningSection>
           <NavigationButtons
-            onPrev={() => {
+            onPrev={async () => {
               const currentWordIndex = listOfWordsBySelectedTabMap[
                 currentTab
               ].indexOf(selectedWord!);
 
-              if (currentWordIndex > 0) {
-                setSelectedWord(
-                  listOfWordsBySelectedTabMap[currentTab][currentWordIndex - 1]!
-                );
-              } else {
-                setSelectedWord(listOfWordsBySelectedTabMap[currentTab][0]!);
-              }
+              await setSelectedWord(
+                listOfWordsBySelectedTabMap[currentTab][
+                  currentWordIndex > 0 ? currentWordIndex - 1 : 0
+                ]!
+              );
             }}
-            onNext={() => {
+            onNext={async () => {
               const currentWordIndex = listOfWordsBySelectedTabMap[
                 currentTab
               ].indexOf(selectedWord!);
 
-              if (
-                currentWordIndex <
-                listOfWordsBySelectedTabMap[currentTab].length - 1
-              ) {
-                setSelectedWord(
-                  listOfWordsBySelectedTabMap[currentTab][currentWordIndex + 1]!
-                );
-              } else {
-                setSelectedWord(
-                  listOfWordsBySelectedTabMap[currentTab][
-                    listOfWordsBySelectedTabMap[currentTab].length - 1
-                  ]!
-                );
-              }
+              const lastWordIndex =
+                listOfWordsBySelectedTabMap[currentTab].length - 1;
+
+              await setSelectedWord(
+                listOfWordsBySelectedTabMap[currentTab][
+                  currentWordIndex < lastWordIndex
+                    ? currentWordIndex + 1
+                    : lastWordIndex
+                ]!
+              );
             }}
           />
         </Grid>
@@ -100,6 +118,12 @@ export default function Word() {
           </TabsPanel>
         </Grid>
       </Grid>
+      <Box marginTop={5}>
+        <Typography variant="h5" fontWeight={700} style={{ marginBottom: 24 }}>
+          Visited words history
+        </Typography>
+        <VisitedWordsHistoryTable />
+      </Box>
     </Container>
   );
 }

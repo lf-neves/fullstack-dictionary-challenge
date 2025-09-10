@@ -54,6 +54,11 @@ export type Synonym = $Result.DefaultSelection<Prisma.$SynonymPayload>
  */
 export type User = $Result.DefaultSelection<Prisma.$UserPayload>
 /**
+ * Model UserWordHistory
+ * 
+ */
+export type UserWordHistory = $Result.DefaultSelection<Prisma.$UserWordHistoryPayload>
+/**
  * Model Word
  * 
  */
@@ -280,6 +285,16 @@ export class PrismaClient<
     * ```
     */
   get user(): Prisma.UserDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.userWordHistory`: Exposes CRUD operations for the **UserWordHistory** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more UserWordHistories
+    * const userWordHistories = await prisma.userWordHistory.findMany()
+    * ```
+    */
+  get userWordHistory(): Prisma.UserWordHistoryDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.word`: Exposes CRUD operations for the **Word** model.
@@ -738,6 +753,7 @@ export namespace Prisma {
     SourceUrl: 'SourceUrl',
     Synonym: 'Synonym',
     User: 'User',
+    UserWordHistory: 'UserWordHistory',
     Word: 'Word'
   };
 
@@ -757,7 +773,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "antonym" | "definition" | "license" | "meaning" | "phonetic" | "sourceUrl" | "synonym" | "user" | "word"
+      modelProps: "antonym" | "definition" | "license" | "meaning" | "phonetic" | "sourceUrl" | "synonym" | "user" | "userWordHistory" | "word"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1353,6 +1369,80 @@ export namespace Prisma {
           }
         }
       }
+      UserWordHistory: {
+        payload: Prisma.$UserWordHistoryPayload<ExtArgs>
+        fields: Prisma.UserWordHistoryFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.UserWordHistoryFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserWordHistoryPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.UserWordHistoryFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserWordHistoryPayload>
+          }
+          findFirst: {
+            args: Prisma.UserWordHistoryFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserWordHistoryPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.UserWordHistoryFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserWordHistoryPayload>
+          }
+          findMany: {
+            args: Prisma.UserWordHistoryFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserWordHistoryPayload>[]
+          }
+          create: {
+            args: Prisma.UserWordHistoryCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserWordHistoryPayload>
+          }
+          createMany: {
+            args: Prisma.UserWordHistoryCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.UserWordHistoryCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserWordHistoryPayload>[]
+          }
+          delete: {
+            args: Prisma.UserWordHistoryDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserWordHistoryPayload>
+          }
+          update: {
+            args: Prisma.UserWordHistoryUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserWordHistoryPayload>
+          }
+          deleteMany: {
+            args: Prisma.UserWordHistoryDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.UserWordHistoryUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.UserWordHistoryUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserWordHistoryPayload>[]
+          }
+          upsert: {
+            args: Prisma.UserWordHistoryUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserWordHistoryPayload>
+          }
+          aggregate: {
+            args: Prisma.UserWordHistoryAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateUserWordHistory>
+          }
+          groupBy: {
+            args: Prisma.UserWordHistoryGroupByArgs<ExtArgs>
+            result: $Utils.Optional<UserWordHistoryGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.UserWordHistoryCountArgs<ExtArgs>
+            result: $Utils.Optional<UserWordHistoryCountAggregateOutputType> | number
+          }
+        }
+      }
       Word: {
         payload: Prisma.$WordPayload<ExtArgs>
         fields: Prisma.WordFieldRefs
@@ -1519,6 +1609,7 @@ export namespace Prisma {
     sourceUrl?: SourceUrlOmit
     synonym?: SynonymOmit
     user?: UserOmit
+    userWordHistory?: UserWordHistoryOmit
     word?: WordOmit
   }
 
@@ -1699,6 +1790,37 @@ export namespace Prisma {
 
 
   /**
+   * Count Type UserCountOutputType
+   */
+
+  export type UserCountOutputType = {
+    history: number
+  }
+
+  export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    history?: boolean | UserCountOutputTypeCountHistoryArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserCountOutputType
+     */
+    select?: UserCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserWordHistoryWhereInput
+  }
+
+
+  /**
    * Count Type WordCountOutputType
    */
 
@@ -1706,12 +1828,14 @@ export namespace Prisma {
     phonetics: number
     meanings: number
     sourceUrls: number
+    history: number
   }
 
   export type WordCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     phonetics?: boolean | WordCountOutputTypeCountPhoneticsArgs
     meanings?: boolean | WordCountOutputTypeCountMeaningsArgs
     sourceUrls?: boolean | WordCountOutputTypeCountSourceUrlsArgs
+    history?: boolean | WordCountOutputTypeCountHistoryArgs
   }
 
   // Custom InputTypes
@@ -1744,6 +1868,13 @@ export namespace Prisma {
    */
   export type WordCountOutputTypeCountSourceUrlsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: SourceUrlWhereInput
+  }
+
+  /**
+   * WordCountOutputType without action
+   */
+  export type WordCountOutputTypeCountHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserWordHistoryWhereInput
   }
 
 
@@ -9360,6 +9491,8 @@ export namespace Prisma {
     lastName?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    history?: boolean | User$historyArgs<ExtArgs>
+    _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -9393,10 +9526,18 @@ export namespace Prisma {
   }
 
   export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"userId" | "email" | "password" | "firstName" | "lastName" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    history?: boolean | User$historyArgs<ExtArgs>
+    _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type UserIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
-    objects: {}
+    objects: {
+      history: Prisma.$UserWordHistoryPayload<ExtArgs>[]
+    }
     scalars: $Extensions.GetPayloadResult<{
       userId: string
       email: string
@@ -9799,6 +9940,7 @@ export namespace Prisma {
    */
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    history<T extends User$historyArgs<ExtArgs> = {}>(args?: Subset<T, User$historyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserWordHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9852,6 +9994,10 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
      * Filter, which User to fetch.
      */
     where: UserWhereUniqueInput
@@ -9870,6 +10016,10 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
      * Filter, which User to fetch.
      */
     where: UserWhereUniqueInput
@@ -9887,6 +10037,10 @@ export namespace Prisma {
      * Omit specific fields from the User
      */
     omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
     /**
      * Filter, which User to fetch.
      */
@@ -9936,6 +10090,10 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
      * Filter, which User to fetch.
      */
     where?: UserWhereInput
@@ -9984,6 +10142,10 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
      * Filter, which Users to fetch.
      */
     where?: UserWhereInput
@@ -10026,6 +10188,10 @@ export namespace Prisma {
      * Omit specific fields from the User
      */
     omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
     /**
      * The data needed to create a User.
      */
@@ -10074,6 +10240,10 @@ export namespace Prisma {
      * Omit specific fields from the User
      */
     omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
     /**
      * The data needed to update a User.
      */
@@ -10141,6 +10311,10 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
      * The filter to search for the User to update in case it exists.
      */
     where: UserWhereUniqueInput
@@ -10167,6 +10341,10 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
      * Filter which User to delete.
      */
     where: UserWhereUniqueInput
@@ -10187,6 +10365,30 @@ export namespace Prisma {
   }
 
   /**
+   * User.history
+   */
+  export type User$historyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserWordHistory
+     */
+    select?: UserWordHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserWordHistory
+     */
+    omit?: UserWordHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserWordHistoryInclude<ExtArgs> | null
+    where?: UserWordHistoryWhereInput
+    orderBy?: UserWordHistoryOrderByWithRelationInput | UserWordHistoryOrderByWithRelationInput[]
+    cursor?: UserWordHistoryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserWordHistoryScalarFieldEnum | UserWordHistoryScalarFieldEnum[]
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10198,6 +10400,1063 @@ export namespace Prisma {
      * Omit specific fields from the User
      */
     omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model UserWordHistory
+   */
+
+  export type AggregateUserWordHistory = {
+    _count: UserWordHistoryCountAggregateOutputType | null
+    _min: UserWordHistoryMinAggregateOutputType | null
+    _max: UserWordHistoryMaxAggregateOutputType | null
+  }
+
+  export type UserWordHistoryMinAggregateOutputType = {
+    userWordHistoryId: string | null
+    userId: string | null
+    wordId: string | null
+    lastVisitedAt: Date | null
+  }
+
+  export type UserWordHistoryMaxAggregateOutputType = {
+    userWordHistoryId: string | null
+    userId: string | null
+    wordId: string | null
+    lastVisitedAt: Date | null
+  }
+
+  export type UserWordHistoryCountAggregateOutputType = {
+    userWordHistoryId: number
+    userId: number
+    wordId: number
+    lastVisitedAt: number
+    _all: number
+  }
+
+
+  export type UserWordHistoryMinAggregateInputType = {
+    userWordHistoryId?: true
+    userId?: true
+    wordId?: true
+    lastVisitedAt?: true
+  }
+
+  export type UserWordHistoryMaxAggregateInputType = {
+    userWordHistoryId?: true
+    userId?: true
+    wordId?: true
+    lastVisitedAt?: true
+  }
+
+  export type UserWordHistoryCountAggregateInputType = {
+    userWordHistoryId?: true
+    userId?: true
+    wordId?: true
+    lastVisitedAt?: true
+    _all?: true
+  }
+
+  export type UserWordHistoryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserWordHistory to aggregate.
+     */
+    where?: UserWordHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserWordHistories to fetch.
+     */
+    orderBy?: UserWordHistoryOrderByWithRelationInput | UserWordHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: UserWordHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserWordHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserWordHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned UserWordHistories
+    **/
+    _count?: true | UserWordHistoryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: UserWordHistoryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: UserWordHistoryMaxAggregateInputType
+  }
+
+  export type GetUserWordHistoryAggregateType<T extends UserWordHistoryAggregateArgs> = {
+        [P in keyof T & keyof AggregateUserWordHistory]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUserWordHistory[P]>
+      : GetScalarType<T[P], AggregateUserWordHistory[P]>
+  }
+
+
+
+
+  export type UserWordHistoryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserWordHistoryWhereInput
+    orderBy?: UserWordHistoryOrderByWithAggregationInput | UserWordHistoryOrderByWithAggregationInput[]
+    by: UserWordHistoryScalarFieldEnum[] | UserWordHistoryScalarFieldEnum
+    having?: UserWordHistoryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: UserWordHistoryCountAggregateInputType | true
+    _min?: UserWordHistoryMinAggregateInputType
+    _max?: UserWordHistoryMaxAggregateInputType
+  }
+
+  export type UserWordHistoryGroupByOutputType = {
+    userWordHistoryId: string
+    userId: string
+    wordId: string
+    lastVisitedAt: Date
+    _count: UserWordHistoryCountAggregateOutputType | null
+    _min: UserWordHistoryMinAggregateOutputType | null
+    _max: UserWordHistoryMaxAggregateOutputType | null
+  }
+
+  type GetUserWordHistoryGroupByPayload<T extends UserWordHistoryGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<UserWordHistoryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof UserWordHistoryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], UserWordHistoryGroupByOutputType[P]>
+            : GetScalarType<T[P], UserWordHistoryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type UserWordHistorySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    userWordHistoryId?: boolean
+    userId?: boolean
+    wordId?: boolean
+    lastVisitedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    word?: boolean | WordDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userWordHistory"]>
+
+  export type UserWordHistorySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    userWordHistoryId?: boolean
+    userId?: boolean
+    wordId?: boolean
+    lastVisitedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    word?: boolean | WordDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userWordHistory"]>
+
+  export type UserWordHistorySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    userWordHistoryId?: boolean
+    userId?: boolean
+    wordId?: boolean
+    lastVisitedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    word?: boolean | WordDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userWordHistory"]>
+
+  export type UserWordHistorySelectScalar = {
+    userWordHistoryId?: boolean
+    userId?: boolean
+    wordId?: boolean
+    lastVisitedAt?: boolean
+  }
+
+  export type UserWordHistoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"userWordHistoryId" | "userId" | "wordId" | "lastVisitedAt", ExtArgs["result"]["userWordHistory"]>
+  export type UserWordHistoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    word?: boolean | WordDefaultArgs<ExtArgs>
+  }
+  export type UserWordHistoryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    word?: boolean | WordDefaultArgs<ExtArgs>
+  }
+  export type UserWordHistoryIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    word?: boolean | WordDefaultArgs<ExtArgs>
+  }
+
+  export type $UserWordHistoryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "UserWordHistory"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      word: Prisma.$WordPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      userWordHistoryId: string
+      userId: string
+      wordId: string
+      lastVisitedAt: Date
+    }, ExtArgs["result"]["userWordHistory"]>
+    composites: {}
+  }
+
+  type UserWordHistoryGetPayload<S extends boolean | null | undefined | UserWordHistoryDefaultArgs> = $Result.GetResult<Prisma.$UserWordHistoryPayload, S>
+
+  type UserWordHistoryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<UserWordHistoryFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: UserWordHistoryCountAggregateInputType | true
+    }
+
+  export interface UserWordHistoryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UserWordHistory'], meta: { name: 'UserWordHistory' } }
+    /**
+     * Find zero or one UserWordHistory that matches the filter.
+     * @param {UserWordHistoryFindUniqueArgs} args - Arguments to find a UserWordHistory
+     * @example
+     * // Get one UserWordHistory
+     * const userWordHistory = await prisma.userWordHistory.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends UserWordHistoryFindUniqueArgs>(args: SelectSubset<T, UserWordHistoryFindUniqueArgs<ExtArgs>>): Prisma__UserWordHistoryClient<$Result.GetResult<Prisma.$UserWordHistoryPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one UserWordHistory that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {UserWordHistoryFindUniqueOrThrowArgs} args - Arguments to find a UserWordHistory
+     * @example
+     * // Get one UserWordHistory
+     * const userWordHistory = await prisma.userWordHistory.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends UserWordHistoryFindUniqueOrThrowArgs>(args: SelectSubset<T, UserWordHistoryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UserWordHistoryClient<$Result.GetResult<Prisma.$UserWordHistoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserWordHistory that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserWordHistoryFindFirstArgs} args - Arguments to find a UserWordHistory
+     * @example
+     * // Get one UserWordHistory
+     * const userWordHistory = await prisma.userWordHistory.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends UserWordHistoryFindFirstArgs>(args?: SelectSubset<T, UserWordHistoryFindFirstArgs<ExtArgs>>): Prisma__UserWordHistoryClient<$Result.GetResult<Prisma.$UserWordHistoryPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserWordHistory that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserWordHistoryFindFirstOrThrowArgs} args - Arguments to find a UserWordHistory
+     * @example
+     * // Get one UserWordHistory
+     * const userWordHistory = await prisma.userWordHistory.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends UserWordHistoryFindFirstOrThrowArgs>(args?: SelectSubset<T, UserWordHistoryFindFirstOrThrowArgs<ExtArgs>>): Prisma__UserWordHistoryClient<$Result.GetResult<Prisma.$UserWordHistoryPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more UserWordHistories that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserWordHistoryFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all UserWordHistories
+     * const userWordHistories = await prisma.userWordHistory.findMany()
+     * 
+     * // Get first 10 UserWordHistories
+     * const userWordHistories = await prisma.userWordHistory.findMany({ take: 10 })
+     * 
+     * // Only select the `userWordHistoryId`
+     * const userWordHistoryWithUserWordHistoryIdOnly = await prisma.userWordHistory.findMany({ select: { userWordHistoryId: true } })
+     * 
+     */
+    findMany<T extends UserWordHistoryFindManyArgs>(args?: SelectSubset<T, UserWordHistoryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserWordHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a UserWordHistory.
+     * @param {UserWordHistoryCreateArgs} args - Arguments to create a UserWordHistory.
+     * @example
+     * // Create one UserWordHistory
+     * const UserWordHistory = await prisma.userWordHistory.create({
+     *   data: {
+     *     // ... data to create a UserWordHistory
+     *   }
+     * })
+     * 
+     */
+    create<T extends UserWordHistoryCreateArgs>(args: SelectSubset<T, UserWordHistoryCreateArgs<ExtArgs>>): Prisma__UserWordHistoryClient<$Result.GetResult<Prisma.$UserWordHistoryPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many UserWordHistories.
+     * @param {UserWordHistoryCreateManyArgs} args - Arguments to create many UserWordHistories.
+     * @example
+     * // Create many UserWordHistories
+     * const userWordHistory = await prisma.userWordHistory.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends UserWordHistoryCreateManyArgs>(args?: SelectSubset<T, UserWordHistoryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many UserWordHistories and returns the data saved in the database.
+     * @param {UserWordHistoryCreateManyAndReturnArgs} args - Arguments to create many UserWordHistories.
+     * @example
+     * // Create many UserWordHistories
+     * const userWordHistory = await prisma.userWordHistory.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many UserWordHistories and only return the `userWordHistoryId`
+     * const userWordHistoryWithUserWordHistoryIdOnly = await prisma.userWordHistory.createManyAndReturn({
+     *   select: { userWordHistoryId: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends UserWordHistoryCreateManyAndReturnArgs>(args?: SelectSubset<T, UserWordHistoryCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserWordHistoryPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a UserWordHistory.
+     * @param {UserWordHistoryDeleteArgs} args - Arguments to delete one UserWordHistory.
+     * @example
+     * // Delete one UserWordHistory
+     * const UserWordHistory = await prisma.userWordHistory.delete({
+     *   where: {
+     *     // ... filter to delete one UserWordHistory
+     *   }
+     * })
+     * 
+     */
+    delete<T extends UserWordHistoryDeleteArgs>(args: SelectSubset<T, UserWordHistoryDeleteArgs<ExtArgs>>): Prisma__UserWordHistoryClient<$Result.GetResult<Prisma.$UserWordHistoryPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one UserWordHistory.
+     * @param {UserWordHistoryUpdateArgs} args - Arguments to update one UserWordHistory.
+     * @example
+     * // Update one UserWordHistory
+     * const userWordHistory = await prisma.userWordHistory.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends UserWordHistoryUpdateArgs>(args: SelectSubset<T, UserWordHistoryUpdateArgs<ExtArgs>>): Prisma__UserWordHistoryClient<$Result.GetResult<Prisma.$UserWordHistoryPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more UserWordHistories.
+     * @param {UserWordHistoryDeleteManyArgs} args - Arguments to filter UserWordHistories to delete.
+     * @example
+     * // Delete a few UserWordHistories
+     * const { count } = await prisma.userWordHistory.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends UserWordHistoryDeleteManyArgs>(args?: SelectSubset<T, UserWordHistoryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserWordHistories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserWordHistoryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many UserWordHistories
+     * const userWordHistory = await prisma.userWordHistory.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends UserWordHistoryUpdateManyArgs>(args: SelectSubset<T, UserWordHistoryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserWordHistories and returns the data updated in the database.
+     * @param {UserWordHistoryUpdateManyAndReturnArgs} args - Arguments to update many UserWordHistories.
+     * @example
+     * // Update many UserWordHistories
+     * const userWordHistory = await prisma.userWordHistory.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more UserWordHistories and only return the `userWordHistoryId`
+     * const userWordHistoryWithUserWordHistoryIdOnly = await prisma.userWordHistory.updateManyAndReturn({
+     *   select: { userWordHistoryId: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends UserWordHistoryUpdateManyAndReturnArgs>(args: SelectSubset<T, UserWordHistoryUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserWordHistoryPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one UserWordHistory.
+     * @param {UserWordHistoryUpsertArgs} args - Arguments to update or create a UserWordHistory.
+     * @example
+     * // Update or create a UserWordHistory
+     * const userWordHistory = await prisma.userWordHistory.upsert({
+     *   create: {
+     *     // ... data to create a UserWordHistory
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the UserWordHistory we want to update
+     *   }
+     * })
+     */
+    upsert<T extends UserWordHistoryUpsertArgs>(args: SelectSubset<T, UserWordHistoryUpsertArgs<ExtArgs>>): Prisma__UserWordHistoryClient<$Result.GetResult<Prisma.$UserWordHistoryPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of UserWordHistories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserWordHistoryCountArgs} args - Arguments to filter UserWordHistories to count.
+     * @example
+     * // Count the number of UserWordHistories
+     * const count = await prisma.userWordHistory.count({
+     *   where: {
+     *     // ... the filter for the UserWordHistories we want to count
+     *   }
+     * })
+    **/
+    count<T extends UserWordHistoryCountArgs>(
+      args?: Subset<T, UserWordHistoryCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], UserWordHistoryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a UserWordHistory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserWordHistoryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends UserWordHistoryAggregateArgs>(args: Subset<T, UserWordHistoryAggregateArgs>): Prisma.PrismaPromise<GetUserWordHistoryAggregateType<T>>
+
+    /**
+     * Group by UserWordHistory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserWordHistoryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends UserWordHistoryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: UserWordHistoryGroupByArgs['orderBy'] }
+        : { orderBy?: UserWordHistoryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, UserWordHistoryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserWordHistoryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the UserWordHistory model
+   */
+  readonly fields: UserWordHistoryFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for UserWordHistory.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__UserWordHistoryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    word<T extends WordDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WordDefaultArgs<ExtArgs>>): Prisma__WordClient<$Result.GetResult<Prisma.$WordPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the UserWordHistory model
+   */
+  interface UserWordHistoryFieldRefs {
+    readonly userWordHistoryId: FieldRef<"UserWordHistory", 'String'>
+    readonly userId: FieldRef<"UserWordHistory", 'String'>
+    readonly wordId: FieldRef<"UserWordHistory", 'String'>
+    readonly lastVisitedAt: FieldRef<"UserWordHistory", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * UserWordHistory findUnique
+   */
+  export type UserWordHistoryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserWordHistory
+     */
+    select?: UserWordHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserWordHistory
+     */
+    omit?: UserWordHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserWordHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which UserWordHistory to fetch.
+     */
+    where: UserWordHistoryWhereUniqueInput
+  }
+
+  /**
+   * UserWordHistory findUniqueOrThrow
+   */
+  export type UserWordHistoryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserWordHistory
+     */
+    select?: UserWordHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserWordHistory
+     */
+    omit?: UserWordHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserWordHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which UserWordHistory to fetch.
+     */
+    where: UserWordHistoryWhereUniqueInput
+  }
+
+  /**
+   * UserWordHistory findFirst
+   */
+  export type UserWordHistoryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserWordHistory
+     */
+    select?: UserWordHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserWordHistory
+     */
+    omit?: UserWordHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserWordHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which UserWordHistory to fetch.
+     */
+    where?: UserWordHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserWordHistories to fetch.
+     */
+    orderBy?: UserWordHistoryOrderByWithRelationInput | UserWordHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserWordHistories.
+     */
+    cursor?: UserWordHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserWordHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserWordHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserWordHistories.
+     */
+    distinct?: UserWordHistoryScalarFieldEnum | UserWordHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * UserWordHistory findFirstOrThrow
+   */
+  export type UserWordHistoryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserWordHistory
+     */
+    select?: UserWordHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserWordHistory
+     */
+    omit?: UserWordHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserWordHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which UserWordHistory to fetch.
+     */
+    where?: UserWordHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserWordHistories to fetch.
+     */
+    orderBy?: UserWordHistoryOrderByWithRelationInput | UserWordHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserWordHistories.
+     */
+    cursor?: UserWordHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserWordHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserWordHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserWordHistories.
+     */
+    distinct?: UserWordHistoryScalarFieldEnum | UserWordHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * UserWordHistory findMany
+   */
+  export type UserWordHistoryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserWordHistory
+     */
+    select?: UserWordHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserWordHistory
+     */
+    omit?: UserWordHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserWordHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which UserWordHistories to fetch.
+     */
+    where?: UserWordHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserWordHistories to fetch.
+     */
+    orderBy?: UserWordHistoryOrderByWithRelationInput | UserWordHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing UserWordHistories.
+     */
+    cursor?: UserWordHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserWordHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserWordHistories.
+     */
+    skip?: number
+    distinct?: UserWordHistoryScalarFieldEnum | UserWordHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * UserWordHistory create
+   */
+  export type UserWordHistoryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserWordHistory
+     */
+    select?: UserWordHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserWordHistory
+     */
+    omit?: UserWordHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserWordHistoryInclude<ExtArgs> | null
+    /**
+     * The data needed to create a UserWordHistory.
+     */
+    data: XOR<UserWordHistoryCreateInput, UserWordHistoryUncheckedCreateInput>
+  }
+
+  /**
+   * UserWordHistory createMany
+   */
+  export type UserWordHistoryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many UserWordHistories.
+     */
+    data: UserWordHistoryCreateManyInput | UserWordHistoryCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * UserWordHistory createManyAndReturn
+   */
+  export type UserWordHistoryCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserWordHistory
+     */
+    select?: UserWordHistorySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserWordHistory
+     */
+    omit?: UserWordHistoryOmit<ExtArgs> | null
+    /**
+     * The data used to create many UserWordHistories.
+     */
+    data: UserWordHistoryCreateManyInput | UserWordHistoryCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserWordHistoryIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserWordHistory update
+   */
+  export type UserWordHistoryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserWordHistory
+     */
+    select?: UserWordHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserWordHistory
+     */
+    omit?: UserWordHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserWordHistoryInclude<ExtArgs> | null
+    /**
+     * The data needed to update a UserWordHistory.
+     */
+    data: XOR<UserWordHistoryUpdateInput, UserWordHistoryUncheckedUpdateInput>
+    /**
+     * Choose, which UserWordHistory to update.
+     */
+    where: UserWordHistoryWhereUniqueInput
+  }
+
+  /**
+   * UserWordHistory updateMany
+   */
+  export type UserWordHistoryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update UserWordHistories.
+     */
+    data: XOR<UserWordHistoryUpdateManyMutationInput, UserWordHistoryUncheckedUpdateManyInput>
+    /**
+     * Filter which UserWordHistories to update
+     */
+    where?: UserWordHistoryWhereInput
+    /**
+     * Limit how many UserWordHistories to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserWordHistory updateManyAndReturn
+   */
+  export type UserWordHistoryUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserWordHistory
+     */
+    select?: UserWordHistorySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserWordHistory
+     */
+    omit?: UserWordHistoryOmit<ExtArgs> | null
+    /**
+     * The data used to update UserWordHistories.
+     */
+    data: XOR<UserWordHistoryUpdateManyMutationInput, UserWordHistoryUncheckedUpdateManyInput>
+    /**
+     * Filter which UserWordHistories to update
+     */
+    where?: UserWordHistoryWhereInput
+    /**
+     * Limit how many UserWordHistories to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserWordHistoryIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserWordHistory upsert
+   */
+  export type UserWordHistoryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserWordHistory
+     */
+    select?: UserWordHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserWordHistory
+     */
+    omit?: UserWordHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserWordHistoryInclude<ExtArgs> | null
+    /**
+     * The filter to search for the UserWordHistory to update in case it exists.
+     */
+    where: UserWordHistoryWhereUniqueInput
+    /**
+     * In case the UserWordHistory found by the `where` argument doesn't exist, create a new UserWordHistory with this data.
+     */
+    create: XOR<UserWordHistoryCreateInput, UserWordHistoryUncheckedCreateInput>
+    /**
+     * In case the UserWordHistory was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<UserWordHistoryUpdateInput, UserWordHistoryUncheckedUpdateInput>
+  }
+
+  /**
+   * UserWordHistory delete
+   */
+  export type UserWordHistoryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserWordHistory
+     */
+    select?: UserWordHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserWordHistory
+     */
+    omit?: UserWordHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserWordHistoryInclude<ExtArgs> | null
+    /**
+     * Filter which UserWordHistory to delete.
+     */
+    where: UserWordHistoryWhereUniqueInput
+  }
+
+  /**
+   * UserWordHistory deleteMany
+   */
+  export type UserWordHistoryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserWordHistories to delete
+     */
+    where?: UserWordHistoryWhereInput
+    /**
+     * Limit how many UserWordHistories to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserWordHistory without action
+   */
+  export type UserWordHistoryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserWordHistory
+     */
+    select?: UserWordHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserWordHistory
+     */
+    omit?: UserWordHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserWordHistoryInclude<ExtArgs> | null
   }
 
 
@@ -10377,6 +11636,7 @@ export namespace Prisma {
     meanings?: boolean | Word$meaningsArgs<ExtArgs>
     license?: boolean | Word$licenseArgs<ExtArgs>
     sourceUrls?: boolean | Word$sourceUrlsArgs<ExtArgs>
+    history?: boolean | Word$historyArgs<ExtArgs>
     _count?: boolean | WordCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["word"]>
 
@@ -10415,6 +11675,7 @@ export namespace Prisma {
     meanings?: boolean | Word$meaningsArgs<ExtArgs>
     license?: boolean | Word$licenseArgs<ExtArgs>
     sourceUrls?: boolean | Word$sourceUrlsArgs<ExtArgs>
+    history?: boolean | Word$historyArgs<ExtArgs>
     _count?: boolean | WordCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type WordIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10431,6 +11692,7 @@ export namespace Prisma {
       meanings: Prisma.$MeaningPayload<ExtArgs>[]
       license: Prisma.$LicensePayload<ExtArgs> | null
       sourceUrls: Prisma.$SourceUrlPayload<ExtArgs>[]
+      history: Prisma.$UserWordHistoryPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       wordId: string
@@ -10837,6 +12099,7 @@ export namespace Prisma {
     meanings<T extends Word$meaningsArgs<ExtArgs> = {}>(args?: Subset<T, Word$meaningsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MeaningPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     license<T extends Word$licenseArgs<ExtArgs> = {}>(args?: Subset<T, Word$licenseArgs<ExtArgs>>): Prisma__LicenseClient<$Result.GetResult<Prisma.$LicensePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     sourceUrls<T extends Word$sourceUrlsArgs<ExtArgs> = {}>(args?: Subset<T, Word$sourceUrlsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SourceUrlPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    history<T extends Word$historyArgs<ExtArgs> = {}>(args?: Subset<T, Word$historyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserWordHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -11359,6 +12622,30 @@ export namespace Prisma {
   }
 
   /**
+   * Word.history
+   */
+  export type Word$historyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserWordHistory
+     */
+    select?: UserWordHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserWordHistory
+     */
+    omit?: UserWordHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserWordHistoryInclude<ExtArgs> | null
+    where?: UserWordHistoryWhereInput
+    orderBy?: UserWordHistoryOrderByWithRelationInput | UserWordHistoryOrderByWithRelationInput[]
+    cursor?: UserWordHistoryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserWordHistoryScalarFieldEnum | UserWordHistoryScalarFieldEnum[]
+  }
+
+  /**
    * Word without action
    */
   export type WordDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -11469,6 +12756,16 @@ export namespace Prisma {
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+  export const UserWordHistoryScalarFieldEnum: {
+    userWordHistoryId: 'userWordHistoryId',
+    userId: 'userId',
+    wordId: 'wordId',
+    lastVisitedAt: 'lastVisitedAt'
+  };
+
+  export type UserWordHistoryScalarFieldEnum = (typeof UserWordHistoryScalarFieldEnum)[keyof typeof UserWordHistoryScalarFieldEnum]
 
 
   export const WordScalarFieldEnum: {
@@ -11939,6 +13236,7 @@ export namespace Prisma {
     lastName?: StringFilter<"User"> | string
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
+    history?: UserWordHistoryListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -11949,6 +13247,7 @@ export namespace Prisma {
     lastName?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    history?: UserWordHistoryOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -11962,6 +13261,7 @@ export namespace Prisma {
     lastName?: StringFilter<"User"> | string
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
+    history?: UserWordHistoryListRelationFilter
   }, "userId" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -11990,6 +13290,59 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
 
+  export type UserWordHistoryWhereInput = {
+    AND?: UserWordHistoryWhereInput | UserWordHistoryWhereInput[]
+    OR?: UserWordHistoryWhereInput[]
+    NOT?: UserWordHistoryWhereInput | UserWordHistoryWhereInput[]
+    userWordHistoryId?: StringFilter<"UserWordHistory"> | string
+    userId?: StringFilter<"UserWordHistory"> | string
+    wordId?: StringFilter<"UserWordHistory"> | string
+    lastVisitedAt?: DateTimeFilter<"UserWordHistory"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    word?: XOR<WordScalarRelationFilter, WordWhereInput>
+  }
+
+  export type UserWordHistoryOrderByWithRelationInput = {
+    userWordHistoryId?: SortOrder
+    userId?: SortOrder
+    wordId?: SortOrder
+    lastVisitedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+    word?: WordOrderByWithRelationInput
+  }
+
+  export type UserWordHistoryWhereUniqueInput = Prisma.AtLeast<{
+    userWordHistoryId?: string
+    AND?: UserWordHistoryWhereInput | UserWordHistoryWhereInput[]
+    OR?: UserWordHistoryWhereInput[]
+    NOT?: UserWordHistoryWhereInput | UserWordHistoryWhereInput[]
+    userId?: StringFilter<"UserWordHistory"> | string
+    wordId?: StringFilter<"UserWordHistory"> | string
+    lastVisitedAt?: DateTimeFilter<"UserWordHistory"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    word?: XOR<WordScalarRelationFilter, WordWhereInput>
+  }, "userWordHistoryId">
+
+  export type UserWordHistoryOrderByWithAggregationInput = {
+    userWordHistoryId?: SortOrder
+    userId?: SortOrder
+    wordId?: SortOrder
+    lastVisitedAt?: SortOrder
+    _count?: UserWordHistoryCountOrderByAggregateInput
+    _max?: UserWordHistoryMaxOrderByAggregateInput
+    _min?: UserWordHistoryMinOrderByAggregateInput
+  }
+
+  export type UserWordHistoryScalarWhereWithAggregatesInput = {
+    AND?: UserWordHistoryScalarWhereWithAggregatesInput | UserWordHistoryScalarWhereWithAggregatesInput[]
+    OR?: UserWordHistoryScalarWhereWithAggregatesInput[]
+    NOT?: UserWordHistoryScalarWhereWithAggregatesInput | UserWordHistoryScalarWhereWithAggregatesInput[]
+    userWordHistoryId?: StringWithAggregatesFilter<"UserWordHistory"> | string
+    userId?: StringWithAggregatesFilter<"UserWordHistory"> | string
+    wordId?: StringWithAggregatesFilter<"UserWordHistory"> | string
+    lastVisitedAt?: DateTimeWithAggregatesFilter<"UserWordHistory"> | Date | string
+  }
+
   export type WordWhereInput = {
     AND?: WordWhereInput | WordWhereInput[]
     OR?: WordWhereInput[]
@@ -12004,6 +13357,7 @@ export namespace Prisma {
     meanings?: MeaningListRelationFilter
     license?: XOR<LicenseNullableScalarRelationFilter, LicenseWhereInput> | null
     sourceUrls?: SourceUrlListRelationFilter
+    history?: UserWordHistoryListRelationFilter
   }
 
   export type WordOrderByWithRelationInput = {
@@ -12017,6 +13371,7 @@ export namespace Prisma {
     meanings?: MeaningOrderByRelationAggregateInput
     license?: LicenseOrderByWithRelationInput
     sourceUrls?: SourceUrlOrderByRelationAggregateInput
+    history?: UserWordHistoryOrderByRelationAggregateInput
   }
 
   export type WordWhereUniqueInput = Prisma.AtLeast<{
@@ -12033,6 +13388,7 @@ export namespace Prisma {
     meanings?: MeaningListRelationFilter
     license?: XOR<LicenseNullableScalarRelationFilter, LicenseWhereInput> | null
     sourceUrls?: SourceUrlListRelationFilter
+    history?: UserWordHistoryListRelationFilter
   }, "wordId" | "word">
 
   export type WordOrderByWithAggregationInput = {
@@ -12402,6 +13758,7 @@ export namespace Prisma {
     lastName: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    history?: UserWordHistoryCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -12412,6 +13769,7 @@ export namespace Prisma {
     lastName: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    history?: UserWordHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -12422,6 +13780,7 @@ export namespace Prisma {
     lastName?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    history?: UserWordHistoryUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -12432,6 +13791,7 @@ export namespace Prisma {
     lastName?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    history?: UserWordHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -12464,6 +13824,53 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type UserWordHistoryCreateInput = {
+    userWordHistoryId?: string
+    lastVisitedAt?: Date | string
+    user: UserCreateNestedOneWithoutHistoryInput
+    word: WordCreateNestedOneWithoutHistoryInput
+  }
+
+  export type UserWordHistoryUncheckedCreateInput = {
+    userWordHistoryId?: string
+    userId: string
+    wordId: string
+    lastVisitedAt?: Date | string
+  }
+
+  export type UserWordHistoryUpdateInput = {
+    userWordHistoryId?: StringFieldUpdateOperationsInput | string
+    lastVisitedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutHistoryNestedInput
+    word?: WordUpdateOneRequiredWithoutHistoryNestedInput
+  }
+
+  export type UserWordHistoryUncheckedUpdateInput = {
+    userWordHistoryId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    wordId?: StringFieldUpdateOperationsInput | string
+    lastVisitedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserWordHistoryCreateManyInput = {
+    userWordHistoryId?: string
+    userId: string
+    wordId: string
+    lastVisitedAt?: Date | string
+  }
+
+  export type UserWordHistoryUpdateManyMutationInput = {
+    userWordHistoryId?: StringFieldUpdateOperationsInput | string
+    lastVisitedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserWordHistoryUncheckedUpdateManyInput = {
+    userWordHistoryId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    wordId?: StringFieldUpdateOperationsInput | string
+    lastVisitedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type WordCreateInput = {
     wordId?: string
     word: string
@@ -12474,6 +13881,7 @@ export namespace Prisma {
     meanings?: MeaningCreateNestedManyWithoutWordInput
     license?: LicenseCreateNestedOneWithoutWordsInput
     sourceUrls?: SourceUrlCreateNestedManyWithoutWordInput
+    history?: UserWordHistoryCreateNestedManyWithoutWordInput
   }
 
   export type WordUncheckedCreateInput = {
@@ -12486,6 +13894,7 @@ export namespace Prisma {
     phonetics?: PhoneticUncheckedCreateNestedManyWithoutWordInput
     meanings?: MeaningUncheckedCreateNestedManyWithoutWordInput
     sourceUrls?: SourceUrlUncheckedCreateNestedManyWithoutWordInput
+    history?: UserWordHistoryUncheckedCreateNestedManyWithoutWordInput
   }
 
   export type WordUpdateInput = {
@@ -12498,6 +13907,7 @@ export namespace Prisma {
     meanings?: MeaningUpdateManyWithoutWordNestedInput
     license?: LicenseUpdateOneWithoutWordsNestedInput
     sourceUrls?: SourceUrlUpdateManyWithoutWordNestedInput
+    history?: UserWordHistoryUpdateManyWithoutWordNestedInput
   }
 
   export type WordUncheckedUpdateInput = {
@@ -12510,6 +13920,7 @@ export namespace Prisma {
     phonetics?: PhoneticUncheckedUpdateManyWithoutWordNestedInput
     meanings?: MeaningUncheckedUpdateManyWithoutWordNestedInput
     sourceUrls?: SourceUrlUncheckedUpdateManyWithoutWordNestedInput
+    history?: UserWordHistoryUncheckedUpdateManyWithoutWordNestedInput
   }
 
   export type WordCreateManyInput = {
@@ -12823,6 +14234,16 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
+  export type UserWordHistoryListRelationFilter = {
+    every?: UserWordHistoryWhereInput
+    some?: UserWordHistoryWhereInput
+    none?: UserWordHistoryWhereInput
+  }
+
+  export type UserWordHistoryOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type UserCountOrderByAggregateInput = {
     userId?: SortOrder
     email?: SortOrder
@@ -12865,6 +14286,32 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type UserScalarRelationFilter = {
+    is?: UserWhereInput
+    isNot?: UserWhereInput
+  }
+
+  export type UserWordHistoryCountOrderByAggregateInput = {
+    userWordHistoryId?: SortOrder
+    userId?: SortOrder
+    wordId?: SortOrder
+    lastVisitedAt?: SortOrder
+  }
+
+  export type UserWordHistoryMaxOrderByAggregateInput = {
+    userWordHistoryId?: SortOrder
+    userId?: SortOrder
+    wordId?: SortOrder
+    lastVisitedAt?: SortOrder
+  }
+
+  export type UserWordHistoryMinOrderByAggregateInput = {
+    userWordHistoryId?: SortOrder
+    userId?: SortOrder
+    wordId?: SortOrder
+    lastVisitedAt?: SortOrder
   }
 
   export type BoolFilter<$PrismaModel = never> = {
@@ -13262,8 +14709,78 @@ export namespace Prisma {
     update?: XOR<XOR<MeaningUpdateToOneWithWhereWithoutSynonymsInput, MeaningUpdateWithoutSynonymsInput>, MeaningUncheckedUpdateWithoutSynonymsInput>
   }
 
+  export type UserWordHistoryCreateNestedManyWithoutUserInput = {
+    create?: XOR<UserWordHistoryCreateWithoutUserInput, UserWordHistoryUncheckedCreateWithoutUserInput> | UserWordHistoryCreateWithoutUserInput[] | UserWordHistoryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserWordHistoryCreateOrConnectWithoutUserInput | UserWordHistoryCreateOrConnectWithoutUserInput[]
+    createMany?: UserWordHistoryCreateManyUserInputEnvelope
+    connect?: UserWordHistoryWhereUniqueInput | UserWordHistoryWhereUniqueInput[]
+  }
+
+  export type UserWordHistoryUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<UserWordHistoryCreateWithoutUserInput, UserWordHistoryUncheckedCreateWithoutUserInput> | UserWordHistoryCreateWithoutUserInput[] | UserWordHistoryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserWordHistoryCreateOrConnectWithoutUserInput | UserWordHistoryCreateOrConnectWithoutUserInput[]
+    createMany?: UserWordHistoryCreateManyUserInputEnvelope
+    connect?: UserWordHistoryWhereUniqueInput | UserWordHistoryWhereUniqueInput[]
+  }
+
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
+  }
+
+  export type UserWordHistoryUpdateManyWithoutUserNestedInput = {
+    create?: XOR<UserWordHistoryCreateWithoutUserInput, UserWordHistoryUncheckedCreateWithoutUserInput> | UserWordHistoryCreateWithoutUserInput[] | UserWordHistoryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserWordHistoryCreateOrConnectWithoutUserInput | UserWordHistoryCreateOrConnectWithoutUserInput[]
+    upsert?: UserWordHistoryUpsertWithWhereUniqueWithoutUserInput | UserWordHistoryUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: UserWordHistoryCreateManyUserInputEnvelope
+    set?: UserWordHistoryWhereUniqueInput | UserWordHistoryWhereUniqueInput[]
+    disconnect?: UserWordHistoryWhereUniqueInput | UserWordHistoryWhereUniqueInput[]
+    delete?: UserWordHistoryWhereUniqueInput | UserWordHistoryWhereUniqueInput[]
+    connect?: UserWordHistoryWhereUniqueInput | UserWordHistoryWhereUniqueInput[]
+    update?: UserWordHistoryUpdateWithWhereUniqueWithoutUserInput | UserWordHistoryUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: UserWordHistoryUpdateManyWithWhereWithoutUserInput | UserWordHistoryUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: UserWordHistoryScalarWhereInput | UserWordHistoryScalarWhereInput[]
+  }
+
+  export type UserWordHistoryUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<UserWordHistoryCreateWithoutUserInput, UserWordHistoryUncheckedCreateWithoutUserInput> | UserWordHistoryCreateWithoutUserInput[] | UserWordHistoryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserWordHistoryCreateOrConnectWithoutUserInput | UserWordHistoryCreateOrConnectWithoutUserInput[]
+    upsert?: UserWordHistoryUpsertWithWhereUniqueWithoutUserInput | UserWordHistoryUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: UserWordHistoryCreateManyUserInputEnvelope
+    set?: UserWordHistoryWhereUniqueInput | UserWordHistoryWhereUniqueInput[]
+    disconnect?: UserWordHistoryWhereUniqueInput | UserWordHistoryWhereUniqueInput[]
+    delete?: UserWordHistoryWhereUniqueInput | UserWordHistoryWhereUniqueInput[]
+    connect?: UserWordHistoryWhereUniqueInput | UserWordHistoryWhereUniqueInput[]
+    update?: UserWordHistoryUpdateWithWhereUniqueWithoutUserInput | UserWordHistoryUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: UserWordHistoryUpdateManyWithWhereWithoutUserInput | UserWordHistoryUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: UserWordHistoryScalarWhereInput | UserWordHistoryScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutHistoryInput = {
+    create?: XOR<UserCreateWithoutHistoryInput, UserUncheckedCreateWithoutHistoryInput>
+    connectOrCreate?: UserCreateOrConnectWithoutHistoryInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type WordCreateNestedOneWithoutHistoryInput = {
+    create?: XOR<WordCreateWithoutHistoryInput, WordUncheckedCreateWithoutHistoryInput>
+    connectOrCreate?: WordCreateOrConnectWithoutHistoryInput
+    connect?: WordWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutHistoryNestedInput = {
+    create?: XOR<UserCreateWithoutHistoryInput, UserUncheckedCreateWithoutHistoryInput>
+    connectOrCreate?: UserCreateOrConnectWithoutHistoryInput
+    upsert?: UserUpsertWithoutHistoryInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutHistoryInput, UserUpdateWithoutHistoryInput>, UserUncheckedUpdateWithoutHistoryInput>
+  }
+
+  export type WordUpdateOneRequiredWithoutHistoryNestedInput = {
+    create?: XOR<WordCreateWithoutHistoryInput, WordUncheckedCreateWithoutHistoryInput>
+    connectOrCreate?: WordCreateOrConnectWithoutHistoryInput
+    upsert?: WordUpsertWithoutHistoryInput
+    connect?: WordWhereUniqueInput
+    update?: XOR<XOR<WordUpdateToOneWithWhereWithoutHistoryInput, WordUpdateWithoutHistoryInput>, WordUncheckedUpdateWithoutHistoryInput>
   }
 
   export type PhoneticCreateNestedManyWithoutWordInput = {
@@ -13293,6 +14810,13 @@ export namespace Prisma {
     connect?: SourceUrlWhereUniqueInput | SourceUrlWhereUniqueInput[]
   }
 
+  export type UserWordHistoryCreateNestedManyWithoutWordInput = {
+    create?: XOR<UserWordHistoryCreateWithoutWordInput, UserWordHistoryUncheckedCreateWithoutWordInput> | UserWordHistoryCreateWithoutWordInput[] | UserWordHistoryUncheckedCreateWithoutWordInput[]
+    connectOrCreate?: UserWordHistoryCreateOrConnectWithoutWordInput | UserWordHistoryCreateOrConnectWithoutWordInput[]
+    createMany?: UserWordHistoryCreateManyWordInputEnvelope
+    connect?: UserWordHistoryWhereUniqueInput | UserWordHistoryWhereUniqueInput[]
+  }
+
   export type PhoneticUncheckedCreateNestedManyWithoutWordInput = {
     create?: XOR<PhoneticCreateWithoutWordInput, PhoneticUncheckedCreateWithoutWordInput> | PhoneticCreateWithoutWordInput[] | PhoneticUncheckedCreateWithoutWordInput[]
     connectOrCreate?: PhoneticCreateOrConnectWithoutWordInput | PhoneticCreateOrConnectWithoutWordInput[]
@@ -13312,6 +14836,13 @@ export namespace Prisma {
     connectOrCreate?: SourceUrlCreateOrConnectWithoutWordInput | SourceUrlCreateOrConnectWithoutWordInput[]
     createMany?: SourceUrlCreateManyWordInputEnvelope
     connect?: SourceUrlWhereUniqueInput | SourceUrlWhereUniqueInput[]
+  }
+
+  export type UserWordHistoryUncheckedCreateNestedManyWithoutWordInput = {
+    create?: XOR<UserWordHistoryCreateWithoutWordInput, UserWordHistoryUncheckedCreateWithoutWordInput> | UserWordHistoryCreateWithoutWordInput[] | UserWordHistoryUncheckedCreateWithoutWordInput[]
+    connectOrCreate?: UserWordHistoryCreateOrConnectWithoutWordInput | UserWordHistoryCreateOrConnectWithoutWordInput[]
+    createMany?: UserWordHistoryCreateManyWordInputEnvelope
+    connect?: UserWordHistoryWhereUniqueInput | UserWordHistoryWhereUniqueInput[]
   }
 
   export type BoolFieldUpdateOperationsInput = {
@@ -13374,6 +14905,20 @@ export namespace Prisma {
     deleteMany?: SourceUrlScalarWhereInput | SourceUrlScalarWhereInput[]
   }
 
+  export type UserWordHistoryUpdateManyWithoutWordNestedInput = {
+    create?: XOR<UserWordHistoryCreateWithoutWordInput, UserWordHistoryUncheckedCreateWithoutWordInput> | UserWordHistoryCreateWithoutWordInput[] | UserWordHistoryUncheckedCreateWithoutWordInput[]
+    connectOrCreate?: UserWordHistoryCreateOrConnectWithoutWordInput | UserWordHistoryCreateOrConnectWithoutWordInput[]
+    upsert?: UserWordHistoryUpsertWithWhereUniqueWithoutWordInput | UserWordHistoryUpsertWithWhereUniqueWithoutWordInput[]
+    createMany?: UserWordHistoryCreateManyWordInputEnvelope
+    set?: UserWordHistoryWhereUniqueInput | UserWordHistoryWhereUniqueInput[]
+    disconnect?: UserWordHistoryWhereUniqueInput | UserWordHistoryWhereUniqueInput[]
+    delete?: UserWordHistoryWhereUniqueInput | UserWordHistoryWhereUniqueInput[]
+    connect?: UserWordHistoryWhereUniqueInput | UserWordHistoryWhereUniqueInput[]
+    update?: UserWordHistoryUpdateWithWhereUniqueWithoutWordInput | UserWordHistoryUpdateWithWhereUniqueWithoutWordInput[]
+    updateMany?: UserWordHistoryUpdateManyWithWhereWithoutWordInput | UserWordHistoryUpdateManyWithWhereWithoutWordInput[]
+    deleteMany?: UserWordHistoryScalarWhereInput | UserWordHistoryScalarWhereInput[]
+  }
+
   export type PhoneticUncheckedUpdateManyWithoutWordNestedInput = {
     create?: XOR<PhoneticCreateWithoutWordInput, PhoneticUncheckedCreateWithoutWordInput> | PhoneticCreateWithoutWordInput[] | PhoneticUncheckedCreateWithoutWordInput[]
     connectOrCreate?: PhoneticCreateOrConnectWithoutWordInput | PhoneticCreateOrConnectWithoutWordInput[]
@@ -13414,6 +14959,20 @@ export namespace Prisma {
     update?: SourceUrlUpdateWithWhereUniqueWithoutWordInput | SourceUrlUpdateWithWhereUniqueWithoutWordInput[]
     updateMany?: SourceUrlUpdateManyWithWhereWithoutWordInput | SourceUrlUpdateManyWithWhereWithoutWordInput[]
     deleteMany?: SourceUrlScalarWhereInput | SourceUrlScalarWhereInput[]
+  }
+
+  export type UserWordHistoryUncheckedUpdateManyWithoutWordNestedInput = {
+    create?: XOR<UserWordHistoryCreateWithoutWordInput, UserWordHistoryUncheckedCreateWithoutWordInput> | UserWordHistoryCreateWithoutWordInput[] | UserWordHistoryUncheckedCreateWithoutWordInput[]
+    connectOrCreate?: UserWordHistoryCreateOrConnectWithoutWordInput | UserWordHistoryCreateOrConnectWithoutWordInput[]
+    upsert?: UserWordHistoryUpsertWithWhereUniqueWithoutWordInput | UserWordHistoryUpsertWithWhereUniqueWithoutWordInput[]
+    createMany?: UserWordHistoryCreateManyWordInputEnvelope
+    set?: UserWordHistoryWhereUniqueInput | UserWordHistoryWhereUniqueInput[]
+    disconnect?: UserWordHistoryWhereUniqueInput | UserWordHistoryWhereUniqueInput[]
+    delete?: UserWordHistoryWhereUniqueInput | UserWordHistoryWhereUniqueInput[]
+    connect?: UserWordHistoryWhereUniqueInput | UserWordHistoryWhereUniqueInput[]
+    update?: UserWordHistoryUpdateWithWhereUniqueWithoutWordInput | UserWordHistoryUpdateWithWhereUniqueWithoutWordInput[]
+    updateMany?: UserWordHistoryUpdateManyWithWhereWithoutWordInput | UserWordHistoryUpdateManyWithWhereWithoutWordInput[]
+    deleteMany?: UserWordHistoryScalarWhereInput | UserWordHistoryScalarWhereInput[]
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -13660,6 +15219,7 @@ export namespace Prisma {
     phonetics?: PhoneticCreateNestedManyWithoutWordInput
     meanings?: MeaningCreateNestedManyWithoutWordInput
     sourceUrls?: SourceUrlCreateNestedManyWithoutWordInput
+    history?: UserWordHistoryCreateNestedManyWithoutWordInput
   }
 
   export type WordUncheckedCreateWithoutLicenseInput = {
@@ -13671,6 +15231,7 @@ export namespace Prisma {
     phonetics?: PhoneticUncheckedCreateNestedManyWithoutWordInput
     meanings?: MeaningUncheckedCreateNestedManyWithoutWordInput
     sourceUrls?: SourceUrlUncheckedCreateNestedManyWithoutWordInput
+    history?: UserWordHistoryUncheckedCreateNestedManyWithoutWordInput
   }
 
   export type WordCreateOrConnectWithoutLicenseInput = {
@@ -13774,6 +15335,7 @@ export namespace Prisma {
     phonetics?: PhoneticCreateNestedManyWithoutWordInput
     license?: LicenseCreateNestedOneWithoutWordsInput
     sourceUrls?: SourceUrlCreateNestedManyWithoutWordInput
+    history?: UserWordHistoryCreateNestedManyWithoutWordInput
   }
 
   export type WordUncheckedCreateWithoutMeaningsInput = {
@@ -13785,6 +15347,7 @@ export namespace Prisma {
     createdAt?: Date | string
     phonetics?: PhoneticUncheckedCreateNestedManyWithoutWordInput
     sourceUrls?: SourceUrlUncheckedCreateNestedManyWithoutWordInput
+    history?: UserWordHistoryUncheckedCreateNestedManyWithoutWordInput
   }
 
   export type WordCreateOrConnectWithoutMeaningsInput = {
@@ -13874,6 +15437,7 @@ export namespace Prisma {
     phonetics?: PhoneticUpdateManyWithoutWordNestedInput
     license?: LicenseUpdateOneWithoutWordsNestedInput
     sourceUrls?: SourceUrlUpdateManyWithoutWordNestedInput
+    history?: UserWordHistoryUpdateManyWithoutWordNestedInput
   }
 
   export type WordUncheckedUpdateWithoutMeaningsInput = {
@@ -13885,6 +15449,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     phonetics?: PhoneticUncheckedUpdateManyWithoutWordNestedInput
     sourceUrls?: SourceUrlUncheckedUpdateManyWithoutWordNestedInput
+    history?: UserWordHistoryUncheckedUpdateManyWithoutWordNestedInput
   }
 
   export type DefinitionUpsertWithWhereUniqueWithoutMeaningInput = {
@@ -13972,6 +15537,7 @@ export namespace Prisma {
     meanings?: MeaningCreateNestedManyWithoutWordInput
     license?: LicenseCreateNestedOneWithoutWordsInput
     sourceUrls?: SourceUrlCreateNestedManyWithoutWordInput
+    history?: UserWordHistoryCreateNestedManyWithoutWordInput
   }
 
   export type WordUncheckedCreateWithoutPhoneticsInput = {
@@ -13983,6 +15549,7 @@ export namespace Prisma {
     createdAt?: Date | string
     meanings?: MeaningUncheckedCreateNestedManyWithoutWordInput
     sourceUrls?: SourceUrlUncheckedCreateNestedManyWithoutWordInput
+    history?: UserWordHistoryUncheckedCreateNestedManyWithoutWordInput
   }
 
   export type WordCreateOrConnectWithoutPhoneticsInput = {
@@ -14029,6 +15596,7 @@ export namespace Prisma {
     meanings?: MeaningUpdateManyWithoutWordNestedInput
     license?: LicenseUpdateOneWithoutWordsNestedInput
     sourceUrls?: SourceUrlUpdateManyWithoutWordNestedInput
+    history?: UserWordHistoryUpdateManyWithoutWordNestedInput
   }
 
   export type WordUncheckedUpdateWithoutPhoneticsInput = {
@@ -14040,6 +15608,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     meanings?: MeaningUncheckedUpdateManyWithoutWordNestedInput
     sourceUrls?: SourceUrlUncheckedUpdateManyWithoutWordNestedInput
+    history?: UserWordHistoryUncheckedUpdateManyWithoutWordNestedInput
   }
 
   export type LicenseUpsertWithoutPhoneticsInput = {
@@ -14076,6 +15645,7 @@ export namespace Prisma {
     phonetics?: PhoneticCreateNestedManyWithoutWordInput
     meanings?: MeaningCreateNestedManyWithoutWordInput
     license?: LicenseCreateNestedOneWithoutWordsInput
+    history?: UserWordHistoryCreateNestedManyWithoutWordInput
   }
 
   export type WordUncheckedCreateWithoutSourceUrlsInput = {
@@ -14087,6 +15657,7 @@ export namespace Prisma {
     createdAt?: Date | string
     phonetics?: PhoneticUncheckedCreateNestedManyWithoutWordInput
     meanings?: MeaningUncheckedCreateNestedManyWithoutWordInput
+    history?: UserWordHistoryUncheckedCreateNestedManyWithoutWordInput
   }
 
   export type WordCreateOrConnectWithoutSourceUrlsInput = {
@@ -14114,6 +15685,7 @@ export namespace Prisma {
     phonetics?: PhoneticUpdateManyWithoutWordNestedInput
     meanings?: MeaningUpdateManyWithoutWordNestedInput
     license?: LicenseUpdateOneWithoutWordsNestedInput
+    history?: UserWordHistoryUpdateManyWithoutWordNestedInput
   }
 
   export type WordUncheckedUpdateWithoutSourceUrlsInput = {
@@ -14125,6 +15697,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     phonetics?: PhoneticUncheckedUpdateManyWithoutWordNestedInput
     meanings?: MeaningUncheckedUpdateManyWithoutWordNestedInput
+    history?: UserWordHistoryUncheckedUpdateManyWithoutWordNestedInput
   }
 
   export type MeaningCreateWithoutSynonymsInput = {
@@ -14173,6 +15746,174 @@ export namespace Prisma {
     wordId?: StringFieldUpdateOperationsInput | string
     definitions?: DefinitionUncheckedUpdateManyWithoutMeaningNestedInput
     antonyms?: AntonymUncheckedUpdateManyWithoutMeaningNestedInput
+  }
+
+  export type UserWordHistoryCreateWithoutUserInput = {
+    userWordHistoryId?: string
+    lastVisitedAt?: Date | string
+    word: WordCreateNestedOneWithoutHistoryInput
+  }
+
+  export type UserWordHistoryUncheckedCreateWithoutUserInput = {
+    userWordHistoryId?: string
+    wordId: string
+    lastVisitedAt?: Date | string
+  }
+
+  export type UserWordHistoryCreateOrConnectWithoutUserInput = {
+    where: UserWordHistoryWhereUniqueInput
+    create: XOR<UserWordHistoryCreateWithoutUserInput, UserWordHistoryUncheckedCreateWithoutUserInput>
+  }
+
+  export type UserWordHistoryCreateManyUserInputEnvelope = {
+    data: UserWordHistoryCreateManyUserInput | UserWordHistoryCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserWordHistoryUpsertWithWhereUniqueWithoutUserInput = {
+    where: UserWordHistoryWhereUniqueInput
+    update: XOR<UserWordHistoryUpdateWithoutUserInput, UserWordHistoryUncheckedUpdateWithoutUserInput>
+    create: XOR<UserWordHistoryCreateWithoutUserInput, UserWordHistoryUncheckedCreateWithoutUserInput>
+  }
+
+  export type UserWordHistoryUpdateWithWhereUniqueWithoutUserInput = {
+    where: UserWordHistoryWhereUniqueInput
+    data: XOR<UserWordHistoryUpdateWithoutUserInput, UserWordHistoryUncheckedUpdateWithoutUserInput>
+  }
+
+  export type UserWordHistoryUpdateManyWithWhereWithoutUserInput = {
+    where: UserWordHistoryScalarWhereInput
+    data: XOR<UserWordHistoryUpdateManyMutationInput, UserWordHistoryUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type UserWordHistoryScalarWhereInput = {
+    AND?: UserWordHistoryScalarWhereInput | UserWordHistoryScalarWhereInput[]
+    OR?: UserWordHistoryScalarWhereInput[]
+    NOT?: UserWordHistoryScalarWhereInput | UserWordHistoryScalarWhereInput[]
+    userWordHistoryId?: StringFilter<"UserWordHistory"> | string
+    userId?: StringFilter<"UserWordHistory"> | string
+    wordId?: StringFilter<"UserWordHistory"> | string
+    lastVisitedAt?: DateTimeFilter<"UserWordHistory"> | Date | string
+  }
+
+  export type UserCreateWithoutHistoryInput = {
+    userId?: string
+    email: string
+    password: string
+    firstName: string
+    lastName: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserUncheckedCreateWithoutHistoryInput = {
+    userId?: string
+    email: string
+    password: string
+    firstName: string
+    lastName: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserCreateOrConnectWithoutHistoryInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutHistoryInput, UserUncheckedCreateWithoutHistoryInput>
+  }
+
+  export type WordCreateWithoutHistoryInput = {
+    wordId?: string
+    word: string
+    isFavorite: boolean
+    status?: $Enums.WordStatus
+    createdAt?: Date | string
+    phonetics?: PhoneticCreateNestedManyWithoutWordInput
+    meanings?: MeaningCreateNestedManyWithoutWordInput
+    license?: LicenseCreateNestedOneWithoutWordsInput
+    sourceUrls?: SourceUrlCreateNestedManyWithoutWordInput
+  }
+
+  export type WordUncheckedCreateWithoutHistoryInput = {
+    wordId?: string
+    word: string
+    isFavorite: boolean
+    licenseId?: string | null
+    status?: $Enums.WordStatus
+    createdAt?: Date | string
+    phonetics?: PhoneticUncheckedCreateNestedManyWithoutWordInput
+    meanings?: MeaningUncheckedCreateNestedManyWithoutWordInput
+    sourceUrls?: SourceUrlUncheckedCreateNestedManyWithoutWordInput
+  }
+
+  export type WordCreateOrConnectWithoutHistoryInput = {
+    where: WordWhereUniqueInput
+    create: XOR<WordCreateWithoutHistoryInput, WordUncheckedCreateWithoutHistoryInput>
+  }
+
+  export type UserUpsertWithoutHistoryInput = {
+    update: XOR<UserUpdateWithoutHistoryInput, UserUncheckedUpdateWithoutHistoryInput>
+    create: XOR<UserCreateWithoutHistoryInput, UserUncheckedCreateWithoutHistoryInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutHistoryInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutHistoryInput, UserUncheckedUpdateWithoutHistoryInput>
+  }
+
+  export type UserUpdateWithoutHistoryInput = {
+    userId?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserUncheckedUpdateWithoutHistoryInput = {
+    userId?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WordUpsertWithoutHistoryInput = {
+    update: XOR<WordUpdateWithoutHistoryInput, WordUncheckedUpdateWithoutHistoryInput>
+    create: XOR<WordCreateWithoutHistoryInput, WordUncheckedCreateWithoutHistoryInput>
+    where?: WordWhereInput
+  }
+
+  export type WordUpdateToOneWithWhereWithoutHistoryInput = {
+    where?: WordWhereInput
+    data: XOR<WordUpdateWithoutHistoryInput, WordUncheckedUpdateWithoutHistoryInput>
+  }
+
+  export type WordUpdateWithoutHistoryInput = {
+    wordId?: StringFieldUpdateOperationsInput | string
+    word?: StringFieldUpdateOperationsInput | string
+    isFavorite?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumWordStatusFieldUpdateOperationsInput | $Enums.WordStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    phonetics?: PhoneticUpdateManyWithoutWordNestedInput
+    meanings?: MeaningUpdateManyWithoutWordNestedInput
+    license?: LicenseUpdateOneWithoutWordsNestedInput
+    sourceUrls?: SourceUrlUpdateManyWithoutWordNestedInput
+  }
+
+  export type WordUncheckedUpdateWithoutHistoryInput = {
+    wordId?: StringFieldUpdateOperationsInput | string
+    word?: StringFieldUpdateOperationsInput | string
+    isFavorite?: BoolFieldUpdateOperationsInput | boolean
+    licenseId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumWordStatusFieldUpdateOperationsInput | $Enums.WordStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    phonetics?: PhoneticUncheckedUpdateManyWithoutWordNestedInput
+    meanings?: MeaningUncheckedUpdateManyWithoutWordNestedInput
+    sourceUrls?: SourceUrlUncheckedUpdateManyWithoutWordNestedInput
   }
 
   export type PhoneticCreateWithoutWordInput = {
@@ -14263,6 +16004,28 @@ export namespace Prisma {
 
   export type SourceUrlCreateManyWordInputEnvelope = {
     data: SourceUrlCreateManyWordInput | SourceUrlCreateManyWordInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserWordHistoryCreateWithoutWordInput = {
+    userWordHistoryId?: string
+    lastVisitedAt?: Date | string
+    user: UserCreateNestedOneWithoutHistoryInput
+  }
+
+  export type UserWordHistoryUncheckedCreateWithoutWordInput = {
+    userWordHistoryId?: string
+    userId: string
+    lastVisitedAt?: Date | string
+  }
+
+  export type UserWordHistoryCreateOrConnectWithoutWordInput = {
+    where: UserWordHistoryWhereUniqueInput
+    create: XOR<UserWordHistoryCreateWithoutWordInput, UserWordHistoryUncheckedCreateWithoutWordInput>
+  }
+
+  export type UserWordHistoryCreateManyWordInputEnvelope = {
+    data: UserWordHistoryCreateManyWordInput | UserWordHistoryCreateManyWordInput[]
     skipDuplicates?: boolean
   }
 
@@ -14357,6 +16120,22 @@ export namespace Prisma {
     wordId?: StringFilter<"SourceUrl"> | string
   }
 
+  export type UserWordHistoryUpsertWithWhereUniqueWithoutWordInput = {
+    where: UserWordHistoryWhereUniqueInput
+    update: XOR<UserWordHistoryUpdateWithoutWordInput, UserWordHistoryUncheckedUpdateWithoutWordInput>
+    create: XOR<UserWordHistoryCreateWithoutWordInput, UserWordHistoryUncheckedCreateWithoutWordInput>
+  }
+
+  export type UserWordHistoryUpdateWithWhereUniqueWithoutWordInput = {
+    where: UserWordHistoryWhereUniqueInput
+    data: XOR<UserWordHistoryUpdateWithoutWordInput, UserWordHistoryUncheckedUpdateWithoutWordInput>
+  }
+
+  export type UserWordHistoryUpdateManyWithWhereWithoutWordInput = {
+    where: UserWordHistoryScalarWhereInput
+    data: XOR<UserWordHistoryUpdateManyMutationInput, UserWordHistoryUncheckedUpdateManyWithoutWordInput>
+  }
+
   export type WordCreateManyLicenseInput = {
     wordId?: string
     word: string
@@ -14382,6 +16161,7 @@ export namespace Prisma {
     phonetics?: PhoneticUpdateManyWithoutWordNestedInput
     meanings?: MeaningUpdateManyWithoutWordNestedInput
     sourceUrls?: SourceUrlUpdateManyWithoutWordNestedInput
+    history?: UserWordHistoryUpdateManyWithoutWordNestedInput
   }
 
   export type WordUncheckedUpdateWithoutLicenseInput = {
@@ -14393,6 +16173,7 @@ export namespace Prisma {
     phonetics?: PhoneticUncheckedUpdateManyWithoutWordNestedInput
     meanings?: MeaningUncheckedUpdateManyWithoutWordNestedInput
     sourceUrls?: SourceUrlUncheckedUpdateManyWithoutWordNestedInput
+    history?: UserWordHistoryUncheckedUpdateManyWithoutWordNestedInput
   }
 
   export type WordUncheckedUpdateManyWithoutLicenseInput = {
@@ -14491,6 +16272,30 @@ export namespace Prisma {
     word?: StringFieldUpdateOperationsInput | string
   }
 
+  export type UserWordHistoryCreateManyUserInput = {
+    userWordHistoryId?: string
+    wordId: string
+    lastVisitedAt?: Date | string
+  }
+
+  export type UserWordHistoryUpdateWithoutUserInput = {
+    userWordHistoryId?: StringFieldUpdateOperationsInput | string
+    lastVisitedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    word?: WordUpdateOneRequiredWithoutHistoryNestedInput
+  }
+
+  export type UserWordHistoryUncheckedUpdateWithoutUserInput = {
+    userWordHistoryId?: StringFieldUpdateOperationsInput | string
+    wordId?: StringFieldUpdateOperationsInput | string
+    lastVisitedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserWordHistoryUncheckedUpdateManyWithoutUserInput = {
+    userWordHistoryId?: StringFieldUpdateOperationsInput | string
+    wordId?: StringFieldUpdateOperationsInput | string
+    lastVisitedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type PhoneticCreateManyWordInput = {
     phoneticId?: string
     text?: string | null
@@ -14507,6 +16312,12 @@ export namespace Prisma {
   export type SourceUrlCreateManyWordInput = {
     sourceUrlId?: string
     url: string
+  }
+
+  export type UserWordHistoryCreateManyWordInput = {
+    userWordHistoryId?: string
+    userId: string
+    lastVisitedAt?: Date | string
   }
 
   export type PhoneticUpdateWithoutWordInput = {
@@ -14567,6 +16378,24 @@ export namespace Prisma {
   export type SourceUrlUncheckedUpdateManyWithoutWordInput = {
     sourceUrlId?: StringFieldUpdateOperationsInput | string
     url?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type UserWordHistoryUpdateWithoutWordInput = {
+    userWordHistoryId?: StringFieldUpdateOperationsInput | string
+    lastVisitedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutHistoryNestedInput
+  }
+
+  export type UserWordHistoryUncheckedUpdateWithoutWordInput = {
+    userWordHistoryId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    lastVisitedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserWordHistoryUncheckedUpdateManyWithoutWordInput = {
+    userWordHistoryId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    lastVisitedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 
