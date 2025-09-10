@@ -1,23 +1,25 @@
-import {
-  Card,
-  CardContent,
-  Typography,
-  Box,
-  LinearProgress,
-  IconButton,
-  Button,
-} from "@mui/material";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import { Card, CardContent, Typography, Button } from "@mui/material";
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
 import {
   GraphQLWord,
+  useSuspenseWordQuery,
   useUpdateWordMutation,
 } from "@/typings/graphql/codegen/graphqlOperations";
 import { useQueryClient } from "@tanstack/react-query";
+import { AudioPlayer } from "./AudioPlayer";
 
 export function WordCard({ word }: { word: GraphQLWord }) {
   const { mutateAsync: updateWordMutation } = useUpdateWordMutation();
   const queryClient = useQueryClient();
+  const { data } = useSuspenseWordQuery({
+    wordId: word.wordId,
+  });
+
+  if (!data?.word) {
+    return null;
+  }
+
+  const [phonetic] = data.word.phonetics;
 
   return (
     <Card sx={{ mb: 2 }}>
@@ -55,18 +57,9 @@ export function WordCard({ word }: { word: GraphQLWord }) {
           {word.word}
         </Typography>
         <Typography variant="subtitle1" align="center" gutterBottom>
-          Some phonetics
+          {phonetic?.text || "No phonetic available"}
         </Typography>
-        <Box display="flex" alignItems="center">
-          <IconButton>
-            <PlayArrowIcon />
-          </IconButton>
-          <LinearProgress
-            variant="determinate"
-            value={50}
-            sx={{ flexGrow: 1, ml: 1 }}
-          />
-        </Box>
+        {phonetic?.audio && <AudioPlayer audioUrl={phonetic.audio} />}
       </CardContent>
     </Card>
   );

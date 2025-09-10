@@ -45,7 +45,7 @@ function HistoryTableRows() {
 
 export function VisitedWordsHistoryTable() {
   return (
-    <TableContainer component={Paper} style={{ maxHeight: 440 }}>
+    <TableContainer component={Paper} style={{ maxHeight: 300 }}>
       <Table
         stickyHeader
         sx={{ minWidth: 650 }}

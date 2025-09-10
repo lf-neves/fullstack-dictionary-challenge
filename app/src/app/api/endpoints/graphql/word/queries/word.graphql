@@ -2,5 +2,10 @@ query Word($wordId: ID!) {
   word(wordId: $wordId) {
     wordId
     word
+    isFavorite
+    phonetics {
+      text
+      audio
+    }
   }
 }

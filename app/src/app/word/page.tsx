@@ -1,7 +1,7 @@
 "use client";
 
-import { useCallback, useState } from "react";
-import { Box, Container, Grid, Typography } from "@mui/material";
+import { Suspense, useCallback, useState } from "react";
+import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import {
   GraphQLWord,
   useSuspenseWordsQuery,
@@ -16,8 +16,14 @@ import { VisitedWordsHistoryTable } from "./components/VisitedWordsHistoryTable"
 import { useQueryClient } from "@tanstack/react-query";
 
 export default function Word() {
+  const [allWordsLimit, setAllWordsLimit] = useState(10);
   const { data: allWordsData } = useSuspenseWordsQuery(
-    {},
+    {
+      input: {
+        limit: allWordsLimit,
+        page: allWordsLimit / 10,
+      },
+    },
     {
       queryKey: ["allWordsQuery"],
     }
@@ -71,8 +77,13 @@ export default function Word() {
   return (
     <Container sx={{ mt: 12 }}>
       <Grid container spacing={12}>
-        <Grid size={{ xs: 12, md: 6 }}>
-          {selectedWord && <WordCard word={selectedWord} />}
+        <Grid size={{ xs: 12, md: 4 }}>
+          {selectedWord && (
+            <Suspense fallback={<>Loading...</>}>
+              <WordCard word={selectedWord} />
+            </Suspense>
+          )}
+          <Box mb={4} />
           <MeaningSection>
             <Typography variant="body1">{`Verb - "${selectedWord?.word}" or an equivalent greeting.`}</Typography>
           </MeaningSection>
@@ -106,19 +117,32 @@ export default function Word() {
             }}
           />
         </Grid>
-        <Grid size={{ xs: 12, md: 6 }}>
+        <Grid size={{ xs: 12, md: 8 }}>
           <TabsPanel<"all" | "favorites">
             currentTab={currentTab}
             setCurrentTab={setCurrentTab}
           >
             <WordList
-              setSelectedWord={setSelectedWord}
               words={listOfWordsBySelectedTabMap[currentTab]}
+              loadMoreButton={
+                currentTab === "all" ? (
+                  <Button
+                    variant="outlined"
+                    style={{ marginBottom: 2 }}
+                    onClick={async () => {
+                      setAllWordsLimit((prev) => prev + 10);
+                    }}
+                  >
+                    Load More
+                  </Button>
+                ) : null
+              }
+              setSelectedWord={setSelectedWord}
             />
           </TabsPanel>
         </Grid>
       </Grid>
-      <Box marginTop={5}>
+      <Box marginTop={6}>
         <Typography variant="h5" fontWeight={700} style={{ marginBottom: 24 }}>
           Visited words history
         </Typography>

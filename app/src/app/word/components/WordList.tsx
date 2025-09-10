@@ -2,11 +2,16 @@ import { GraphQLWord } from "@/typings/graphql/codegen/graphqlOperations";
 import { Box, Button, Grid, Typography } from "@mui/material";
 
 interface WordListProps {
-  words: (GraphQLWord | null)[];
+  words: GraphQLWord[];
+  loadMoreButton: React.ReactNode;
   setSelectedWord: (word: GraphQLWord) => Promise<void>;
 }
 
-export function WordList({ words, setSelectedWord }: WordListProps) {
+export function WordList({
+  words,
+  setSelectedWord,
+  loadMoreButton,
+}: WordListProps) {
   if (words.length === 0) {
     return (
       <Box p={2} textAlign="center">
@@ -18,13 +23,9 @@ export function WordList({ words, setSelectedWord }: WordListProps) {
   }
 
   return (
-    <Grid container>
-      {words.map((word) => {
-        if (!word) {
-          return null;
-        }
-
-        return (
+    <Box sx={{ maxHeight: 440, overflowY: "auto" }}>
+      <Grid container>
+        {words.map((word) => (
           <Grid key={word.wordId} style={{ height: 65, margin: 10 }}>
             <Button
               size="small"
@@ -37,8 +38,9 @@ export function WordList({ words, setSelectedWord }: WordListProps) {
               {word.word}
             </Button>
           </Grid>
-        );
-      })}
-    </Grid>
+        ))}
+      </Grid>
+      {loadMoreButton}
+    </Box>
   );
 }

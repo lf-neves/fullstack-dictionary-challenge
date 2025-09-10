@@ -98,9 +98,8 @@ export interface GraphQLPhonetic {
   __typename?: 'Phonetic';
   audio: Scalars['String']['output'];
   phoneticId: Scalars['ID']['output'];
-  sourceUrl: Scalars['String']['output'];
+  sourceUrl?: Maybe<Scalars['String']['output']>;
   text: Scalars['String']['output'];
-  wordId: Scalars['ID']['output'];
 }
 
 export interface GraphQLQuery {
@@ -108,7 +107,7 @@ export interface GraphQLQuery {
   me?: Maybe<GraphQLUser>;
   userVisitedWordsHistory: Array<GraphQLUserWordHistory>;
   word: GraphQLWord;
-  words: Array<Maybe<GraphQLWord>>;
+  words: Array<GraphQLWord>;
 }
 
 
@@ -150,7 +149,7 @@ export interface GraphQLUserWordHistory {
 export interface GraphQLWord {
   __typename?: 'Word';
   isFavorite: Scalars['Boolean']['output'];
-  phonetic: GraphQLPhonetic;
+  phonetics: Array<GraphQLPhonetic>;
   status: GraphQLWordStatus;
   word: Scalars['String']['output'];
   wordId: Scalars['ID']['output'];
@@ -210,14 +209,14 @@ export type GraphQLWordQueryVariables = Exact<{
 }>;
 
 
-export type GraphQLWordQuery = { __typename?: 'Query', word: { __typename?: 'Word', wordId: string, word: string } };
+export type GraphQLWordQuery = { __typename?: 'Query', word: { __typename?: 'Word', wordId: string, word: string, isFavorite: boolean, phonetics: Array<{ __typename?: 'Phonetic', text: string, audio: string }> } };
 
 export type GraphQLWordsQueryVariables = Exact<{
   input?: InputMaybe<GraphQLWordsInput>;
 }>;
 
 
-export type GraphQLWordsQuery = { __typename?: 'Query', words: Array<{ __typename?: 'Word', wordId: string, word: string, isFavorite: boolean, status: GraphQLWordStatus } | null> };
+export type GraphQLWordsQuery = { __typename?: 'Query', words: Array<{ __typename?: 'Word', wordId: string, word: string, isFavorite: boolean, status: GraphQLWordStatus }> };
 
 
 
@@ -393,6 +392,11 @@ export const WordDocument = `
   word(wordId: $wordId) {
     wordId
     word
+    isFavorite
+    phonetics {
+      text
+      audio
+    }
   }
 }
     `;

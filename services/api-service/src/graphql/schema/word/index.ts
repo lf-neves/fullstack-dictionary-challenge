@@ -1,21 +1,76 @@
 import { prismaClient } from "database";
 import { logger } from "lambda";
+import assert from "node:assert";
 
 import { createMutationResponse } from "@/graphql/createMutationResponse";
 import { GraphQLResolvers } from "@/graphql/generatedTypes";
+
+import { getWordPhonetics } from "./getWordPhonetics";
 
 export const wordResolvers: GraphQLResolvers = {
   Query: {
     word: async (_parent, { wordId }) => {
       const word = await prismaClient.word.findUnique({
         where: { wordId, status: "ACTIVE" },
+        include: { phonetics: { where: { audio: { not: "" } } } },
       });
 
       if (!word) {
         throw new Error("Could not find this word in the dictionary.");
       }
 
-      return word;
+      if (word.phonetics.length > 0) {
+        logger.info(
+          "Word[%s] already has %d phonetic records. Skipping phonetics fetch.",
+          wordId,
+          word.phonetics.length
+        );
+
+        return word;
+      }
+
+      logger.info(
+        "There are no phonetic records for Word[%s]. Will retrieve them from dictionaryapi.dev API.",
+        wordId
+      );
+
+      const wordPhonetics = await getWordPhonetics(word.word);
+
+      if (!wordPhonetics || wordPhonetics.length === 0) {
+        logger.info(
+          "No phonetics were found for Word[%s] in dictionaryapi.dev API.",
+          wordId
+        );
+
+        return word;
+      }
+
+      logger.info(
+        "Will create %d phonetic records for Word[%s].",
+        wordPhonetics.length,
+        wordId
+      );
+
+      await prismaClient.$transaction(
+        wordPhonetics.map((phonetic) =>
+          prismaClient.phonetic.create({
+            data: {
+              wordId: word.wordId,
+              text: phonetic.text,
+              audio: phonetic.audio,
+            },
+          })
+        )
+      );
+
+      const reloadedWord = await prismaClient.word.findUnique({
+        where: { wordId: word.wordId },
+        include: { phonetics: { where: { audio: { not: "" } } } },
+      });
+
+      assert(reloadedWord, `Expected Word[${wordId}] to exist.`);
+
+      return reloadedWord;
     },
     words: async (_parent, { input }) => {
       const { isFavorite, page, limit } = input || {};
