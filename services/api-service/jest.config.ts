@@ -3,7 +3,6 @@ import type { Config } from "jest";
 import path from "path";
 import { pathsToModuleNameMapper } from "ts-jest";
 
-// Assume tsconfig.json is in the same folder as this config file
 const tsconfig = JSON.parse(
   readFileSync(path.resolve(__dirname, "tsconfig.json"), "utf-8")
 );
@@ -14,7 +13,9 @@ const config: Config = {
   rootDir: ".",
   transform: {
     "^.+\\.ts$": ["ts-jest", { useESM: true }],
+    "^.+\\.[j]sx?$": "babel-jest",
   },
+  transformIgnorePatterns: ["/node_modules/lambda/node_modules/(?!p-map)"],
   extensionsToTreatAsEsm: [".ts"],
   moduleNameMapper: pathsToModuleNameMapper(
     tsconfig.compilerOptions.paths || {},
@@ -23,6 +24,7 @@ const config: Config = {
     }
   ),
   setupFilesAfterEnv: ["<rootDir>/setupFilesAfterEnv.ts"],
+  moduleFileExtensions: ["ts", "js", "json", "node"],
 };
 
 export default config;

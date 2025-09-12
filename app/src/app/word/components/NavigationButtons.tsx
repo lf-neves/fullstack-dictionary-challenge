@@ -1,19 +1,17 @@
-import { Box, Button } from "@mui/material";
+import { Box } from "@mui/material";
+import React from "react";
 
-interface NavigationButtonsProps {
-  onPrev: () => void;
-  onNext: () => void;
-}
-
-export function NavigationButtons({ onPrev, onNext }: NavigationButtonsProps) {
+export function NavigationButtons({
+  nextButton,
+  backButton,
+}: {
+  nextButton: React.ReactNode;
+  backButton: React.ReactNode;
+}) {
   return (
     <Box display="flex" justifyContent="space-between" mt={2}>
-      <Button variant="outlined" onClick={onPrev}>
-        Back
-      </Button>
-      <Button variant="outlined" onClick={onNext}>
-        Next
-      </Button>
+      {backButton}
+      {nextButton}
     </Box>
   );
 }

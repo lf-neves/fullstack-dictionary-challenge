@@ -48,6 +48,20 @@ export interface GraphQLCreateWordInput {
   word: Scalars['String']['input'];
 }
 
+export interface GraphQLDefinition {
+  __typename?: 'Definition';
+  definition: Scalars['String']['output'];
+  example?: Maybe<Scalars['String']['output']>;
+}
+
+export interface GraphQLMeaning {
+  __typename?: 'Meaning';
+  antonyms?: Maybe<Array<Scalars['String']['output']>>;
+  definitions: Array<GraphQLDefinition>;
+  partOfSpeech: Scalars['String']['output'];
+  synonyms?: Maybe<Array<Scalars['String']['output']>>;
+}
+
 export interface GraphQLMutation {
   __typename?: 'Mutation';
   authenticateUser?: Maybe<GraphQLAuthPayload>;
@@ -97,8 +111,6 @@ export interface GraphQLMutationResponse {
 export interface GraphQLPhonetic {
   __typename?: 'Phonetic';
   audio: Scalars['String']['output'];
-  phoneticId: Scalars['ID']['output'];
-  sourceUrl?: Maybe<Scalars['String']['output']>;
   text: Scalars['String']['output'];
 }
 
@@ -149,6 +161,7 @@ export interface GraphQLUserWordHistory {
 export interface GraphQLWord {
   __typename?: 'Word';
   isFavorite: Scalars['Boolean']['output'];
+  meanings: Array<GraphQLMeaning>;
   phonetics: Array<GraphQLPhonetic>;
   status: GraphQLWordStatus;
   word: Scalars['String']['output'];
@@ -169,8 +182,8 @@ export type GraphQLWordStatus =
 
 export interface GraphQLWordsInput {
   isFavorite?: InputMaybe<Scalars['Boolean']['input']>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+  page?: InputMaybe<Scalars['PositiveInt']['input']>;
 }
 
 export type GraphQLAuthenticateUserMutationVariables = Exact<{
@@ -209,7 +222,7 @@ export type GraphQLWordQueryVariables = Exact<{
 }>;
 
 
-export type GraphQLWordQuery = { __typename?: 'Query', word: { __typename?: 'Word', wordId: string, word: string, isFavorite: boolean, phonetics: Array<{ __typename?: 'Phonetic', text: string, audio: string }> } };
+export type GraphQLWordQuery = { __typename?: 'Query', word: { __typename?: 'Word', wordId: string, word: string, isFavorite: boolean, phonetics: Array<{ __typename?: 'Phonetic', text: string, audio: string }>, meanings: Array<{ __typename?: 'Meaning', partOfSpeech: string, synonyms?: Array<string> | null, antonyms?: Array<string> | null, definitions: Array<{ __typename?: 'Definition', definition: string, example?: string | null }> }> } };
 
 export type GraphQLWordsQueryVariables = Exact<{
   input?: InputMaybe<GraphQLWordsInput>;
@@ -396,6 +409,15 @@ export const WordDocument = `
     phonetics {
       text
       audio
+    }
+    meanings {
+      partOfSpeech
+      definitions {
+        definition
+        example
+      }
+      synonyms
+      antonyms
     }
   }
 }

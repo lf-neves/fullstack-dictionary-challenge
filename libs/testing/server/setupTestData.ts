@@ -1,15 +1,14 @@
 import { faker } from "@faker-js/faker";
 import { hashPassword } from "core";
 import { prismaClient } from "database";
-import { User } from "database/src/generated/prisma";
-import { Article } from "database/src/generated/prisma";
+import { User, Word } from "database/src/generated/prisma";
 
 export async function setupTestData({
   userOverrides,
-  articleOverrides,
+  wordOverrides,
 }: {
   userOverrides?: Partial<User>;
-  articleOverrides?: Partial<Article>;
+  wordOverrides?: Partial<Word>;
 } = {}) {
   const password = faker.internet.password();
   const hashedPassword = await hashPassword(password);
@@ -24,15 +23,14 @@ export async function setupTestData({
     },
   });
 
-  const article = await prismaClient.article.create({
+  const word = await prismaClient.word.create({
     data: {
-      title: faker.lorem.sentence(),
-      content: faker.lorem.paragraph(),
-      type: "free",
-      category: "technology",
-      ...articleOverrides,
+      word: faker.lorem.word(),
+      isFavorite: faker.datatype.boolean(),
+      status: "ACTIVE",
+      ...wordOverrides,
     },
   });
 
-  return { user, article };
+  return { user, word };
 }

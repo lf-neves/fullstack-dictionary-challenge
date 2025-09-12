@@ -1,253 +1,174 @@
 import { prismaClient } from "database";
 import gql from "graphql-tag";
-import { faker, setupTestData, TestData } from "testing/server";
+import { setupTestData } from "testing/server";
 
 import {
-  GraphQLArticleCategory,
-  GraphQLArticleType,
-  GraphQLMutationCreateArticleArgs,
-  GraphQLMutationUpdateArticleArgs,
-  GraphQLQueryArticleArgs,
-  GraphQLQueryArticlesArgs,
+  GraphQLQueryWordArgs,
+  GraphQLQueryWordsArgs,
 } from "@/graphql/generatedTypes";
+import { getEnhancedGraphQLWord as mockedGetEnhancedGraphQLWord } from "@/modules/getEnhancedGraphQLWord";
 import { query } from "@/test-utils/graphqlTestClient";
 
-describe("Article", () => {
-  let testData: TestData;
+jest.mock("@/modules/getEnhancedGraphQLWord");
+
+describe("Word", () => {
+  let testData: Awaited<ReturnType<typeof setupTestData>>;
+  const mockedGetEnhancedGraphQLWordResult = {
+    phonetics: [
+      {
+        text: "/wɜːd/",
+        audio:
+          "https://api.dictionaryapi.dev/media/pronunciations/en/word-us.mp3",
+      },
+    ],
+    meanings: [
+      {
+        partOfSpeech: "noun",
+        definitions: [
+          {
+            definition:
+              "A single distinct meaningful element of speech or writing.",
+            example: "I don't like the word 'unofficial'.",
+          },
+        ],
+        synonyms: ["term", "expression"],
+        antonyms: [],
+      },
+    ],
+  };
 
   beforeEach(async () => {
-    testData = await setupTestData();
+    testData = await setupTestData({ wordOverrides: { word: "apple" } });
+
+    (mockedGetEnhancedGraphQLWord as jest.Mock).mockResolvedValue({
+      wordId: testData.word.wordId,
+      word: testData.word.word,
+      isFavorite: testData.word.isFavorite,
+      status: testData.word.status,
+      ...mockedGetEnhancedGraphQLWordResult,
+    });
   });
 
-  describe("article: query", () => {
-    const articleQueryDocument = gql`
-      query Article($articleId: ID!) {
-        article(articleId: $articleId) {
-          articleId
+  describe("query word", () => {
+    const wordQueryDocument = gql`
+      query Word($wordId: ID!) {
+        word(wordId: $wordId) {
+          wordId
+          word
+          isFavorite
+          status
+          phonetics {
+            text
+            audio
+          }
+          meanings {
+            partOfSpeech
+            definitions {
+              definition
+              example
+            }
+            synonyms
+            antonyms
+          }
         }
       }
     `;
 
-    test("throws an error if the Article does not exist", async () => {
+    test("returns the word with the phonetics and meanings", async () => {
+      const { word } = testData;
+
       // act
-      const response = await query<GraphQLQueryArticleArgs>({
-        queryDocument: articleQueryDocument,
-        variables: {
-          articleId: faker.string.uuid(),
-        },
+      const queryResult = await query<GraphQLQueryWordArgs>({
+        queryDocument: wordQueryDocument,
+        variables: { wordId: word.wordId },
       });
 
-      expect(response).toHaveProperty(
-        "errors[0].message",
-        "Could not find article."
-      );
-    });
-
-    test("returns the requested Article", async () => {
-      // act
-      const response = await query<GraphQLQueryArticleArgs>({
-        queryDocument: articleQueryDocument,
-        variables: {
-          articleId: testData.article.articleId,
-        },
+      expect(queryResult).toHaveProperty("data.word.wordId", word.wordId);
+      expect(mockedGetEnhancedGraphQLWord).toHaveBeenNthCalledWith(1, {
+        wordId: word.wordId,
       });
-
-      expect(response).toHaveProperty(
-        "data.article.articleId",
-        testData.article.articleId
-      );
     });
   });
 
-  describe("articles: query", () => {
-    const articlesQueryDocument = gql`
-      query Articles {
-        articles {
-          articleId
+  describe("query words", () => {
+    const wordsQueryDocument = gql`
+      query Words($input: WordsInput) {
+        words(input: $input) {
+          wordId
+          word
+          isFavorite
+          status
+          phonetics {
+            text
+            audio
+          }
+          meanings {
+            partOfSpeech
+            definitions {
+              definition
+              example
+            }
+            synonyms
+            antonyms
+          }
         }
       }
     `;
 
-    test("returns all Articles", async () => {
-      const anotherArticle = await prismaClient.article.create({
-        data: {
-          title: faker.lorem.sentence(),
-          content: faker.lorem.paragraph(),
-          type: GraphQLArticleType.Free,
-          category: GraphQLArticleCategory.Sports,
-        },
-      });
-
-      // act
-      const response = await query<GraphQLQueryArticlesArgs>({
-        queryDocument: articlesQueryDocument,
-      });
-
-      expect(response).toHaveProperty(
-        "data.articles",
-        expect.arrayContaining([
-          expect.objectContaining({
-            articleId: testData.article.articleId,
-          }),
-          expect.objectContaining({
-            articleId: anotherArticle.articleId,
-          }),
-        ])
-      );
+    beforeEach(() => {
+      jest.clearAllMocks();
     });
 
-    test("returns Articles filtered by type", async () => {
-      const premiumArticle = await prismaClient.article.create({
-        data: {
-          title: faker.lorem.sentence(),
-          content: faker.lorem.paragraph(),
-          type: GraphQLArticleType.Premium,
-          category: GraphQLArticleCategory.Sports,
-        },
+    test("should return paginated words", async () => {
+      await prismaClient.word.create({
+        data: { word: "grape", status: "ACTIVE", isFavorite: false },
       });
 
-      // act
-      const response = await query<GraphQLQueryArticlesArgs>({
-        queryDocument: articlesQueryDocument,
-        variables: {
-          input: {
-            type: GraphQLArticleType.Premium,
-          },
-        },
+      await prismaClient.word.create({
+        data: { word: "orange", status: "ACTIVE", isFavorite: true },
       });
 
-      expect(response).toHaveProperty(
-        "data.articles",
-        expect.arrayContaining([
-          expect.objectContaining({
-            articleId: premiumArticle.articleId,
-          }),
-          expect.not.objectContaining({
-            articleId: testData.article.articleId,
-          }),
-        ])
-      );
-    });
-
-    test("returns Articles filtered by category", async () => {
-      const anotherArticle = await prismaClient.article.create({
-        data: {
-          title: faker.lorem.sentence(),
-          content: faker.lorem.paragraph(),
-          type: GraphQLArticleType.Free,
-          category: GraphQLArticleCategory.Sports,
-        },
+      await prismaClient.word.create({
+        data: { word: "watermelon", status: "INACTIVE", isFavorite: false },
       });
 
-      // act
-      const response = await query<GraphQLQueryArticlesArgs>({
-        queryDocument: articlesQueryDocument,
-        variables: {
-          input: {
-            category: GraphQLArticleCategory.Sports,
-          },
-        },
-      });
+      (mockedGetEnhancedGraphQLWord as jest.Mock).mockImplementation(
+        async ({ wordId }: { wordId: string }) => {
+          const requestedWord = await prismaClient.word.findUnique({
+            where: { wordId },
+          });
 
-      expect(response).toHaveProperty(
-        "data.articles",
-        expect.arrayContaining([
-          expect.objectContaining({
-            articleId: testData.article.articleId,
-          }),
-          expect.not.objectContaining({
-            articleId: anotherArticle.articleId,
-          }),
-        ])
-      );
-    });
-  });
-
-  describe("createArticle: mutation", () => {
-    const createArticleMutationDocument = gql`
-      mutation CreateArticle($input: CreateArticleInput!) {
-        createArticle(input: $input) {
-          articleId
+          return Promise.resolve({
+            ...requestedWord,
+            ...mockedGetEnhancedGraphQLWordResult,
+          });
         }
-      }
-    `;
-
-    test("creates an Article", async () => {
-      const articleAttributes = {
-        title: faker.lorem.sentence(),
-        content: faker.lorem.paragraph(),
-        type: GraphQLArticleType.Free,
-        category: GraphQLArticleCategory.Sports,
-      };
-
-      // act
-      const response = await query<GraphQLMutationCreateArticleArgs>({
-        queryDocument: createArticleMutationDocument,
-        variables: {
-          input: articleAttributes,
-        },
-      });
-
-      const articleId = response.data?.createArticle.articleId;
-
-      const newArticle = await prismaClient.article.findUnique({
-        where: { articleId },
-      });
-
-      expect(newArticle).toEqual(expect.objectContaining(articleAttributes));
-    });
-  });
-
-  describe("updateArticle: mutation", () => {
-    const updateArticleMutationDocument = gql`
-      mutation UpdateArticle($input: UpdateArticleInput!) {
-        updateArticle(input: $input) {
-          articleId
-        }
-      }
-    `;
-
-    test("throws an error if the provided Article does not exist", async () => {
-      // act
-      const response = await query<GraphQLMutationUpdateArticleArgs>({
-        queryDocument: updateArticleMutationDocument,
-        variables: {
-          input: { articleId: faker.string.uuid() },
-        },
-      });
-
-      expect(response).toHaveProperty(
-        "errors[0].message",
-        "Could not find article."
       );
-    });
-
-    test("updates an Article", async () => {
-      const articleAttributesToUpdate = {
-        title: faker.lorem.sentence(),
-        content: faker.lorem.paragraph(),
-        type: GraphQLArticleType.Premium,
-        category: GraphQLArticleCategory.Technology,
-      };
 
       // act
-      await query<GraphQLMutationUpdateArticleArgs>({
-        queryDocument: updateArticleMutationDocument,
+      const queryResult = await query<GraphQLQueryWordsArgs>({
+        queryDocument: wordsQueryDocument,
         variables: {
-          input: {
-            articleId: testData.article.articleId,
-            ...articleAttributesToUpdate,
-          },
+          input: { page: 1, limit: 2 },
         },
       });
 
-      const updatedArticle = await prismaClient.article.findUnique({
-        where: { articleId: testData.article.articleId },
+      expect(queryResult).toHaveProperty("data.words", [
+        expect.objectContaining({ word: "apple" }),
+        expect.objectContaining({ word: "grape" }),
+      ]);
+
+      const results = queryResult.data?.words || [];
+
+      expect(mockedGetEnhancedGraphQLWord).toHaveBeenCalledWith({
+        wordId: results[0]?.wordId,
       });
 
-      expect(updatedArticle).toEqual(
-        expect.objectContaining(articleAttributesToUpdate)
-      );
+      expect(mockedGetEnhancedGraphQLWord).toHaveBeenCalledWith({
+        wordId: results[1]?.wordId,
+      });
+
+      expect(mockedGetEnhancedGraphQLWord).toHaveBeenCalledTimes(2);
     });
   });
 });

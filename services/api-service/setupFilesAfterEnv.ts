@@ -15,6 +15,11 @@ beforeAll(async () => {
   await prismaClient.$connect();
 });
 
+beforeEach(async () => {
+  await prismaClient.$executeRaw`TRUNCATE TABLE "Word" CASCADE;`;
+  await prismaClient.$executeRaw`TRUNCATE TABLE "User" CASCADE;`;
+});
+
 afterAll(async () => {
   await prismaClient.$disconnect();
 });

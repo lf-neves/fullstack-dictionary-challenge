@@ -3,18 +3,36 @@ enum WordStatus {
   INACTIVE
 }
 
+type Definition {
+  definition: String!
+  example: String
+}
+
+type Meaning {
+  partOfSpeech: String!
+  definitions: [Definition!]!
+  synonyms: [String!]
+  antonyms: [String!]
+}
+
+type Phonetic {
+  text: String!
+  audio: String!
+}
+
 type Word {
   wordId: ID!
   word: String!
   isFavorite: Boolean!
   status: WordStatus!
   phonetics: [Phonetic!]!
+  meanings: [Meaning!]!
 }
 
 input WordsInput {
   isFavorite: Boolean
-  page: Int
-  limit: Int
+  page: PositiveInt
+  limit: PositiveInt
 }
 
 input CreateWordInput {

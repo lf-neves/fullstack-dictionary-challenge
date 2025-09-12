@@ -7,5 +7,14 @@ query Word($wordId: ID!) {
       text
       audio
     }
+    meanings {
+      partOfSpeech
+      definitions {
+        definition
+        example
+      }
+      synonyms
+      antonyms
+    }
   }
 }

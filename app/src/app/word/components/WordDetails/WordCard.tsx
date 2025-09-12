@@ -2,24 +2,26 @@ import { Card, CardContent, Typography, Button } from "@mui/material";
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
 import {
   GraphQLWord,
-  useSuspenseWordQuery,
   useUpdateWordMutation,
 } from "@/typings/graphql/codegen/graphqlOperations";
 import { useQueryClient } from "@tanstack/react-query";
-import { AudioPlayer } from "./AudioPlayer";
+import { AudioPlayer } from "../../../../components/AudioPlayer";
+import { useMemo } from "react";
 
-export function WordCard({ word }: { word: GraphQLWord }) {
+export function WordCard({ word }: { word: Omit<GraphQLWord, "status"> }) {
   const { mutateAsync: updateWordMutation } = useUpdateWordMutation();
   const queryClient = useQueryClient();
-  const { data } = useSuspenseWordQuery({
-    wordId: word.wordId,
-  });
 
-  if (!data?.word) {
-    return null;
+  // find the first phonetic with an audio URL
+  let phonetic = useMemo(
+    () => word.phonetics?.find((currentPhonetic) => currentPhonetic.audio),
+    [word.phonetics]
+  );
+
+  // fallback to the first phonetic if none have an audio URL
+  if (!phonetic) {
+    phonetic = word.phonetics?.[0];
   }
-
-  const [phonetic] = data.word.phonetics;
 
   return (
     <Card sx={{ mb: 2 }}>
@@ -59,7 +61,13 @@ export function WordCard({ word }: { word: GraphQLWord }) {
         <Typography variant="subtitle1" align="center" gutterBottom>
           {phonetic?.text || "No phonetic available"}
         </Typography>
-        {phonetic?.audio && <AudioPlayer audioUrl={phonetic.audio} />}
+        {phonetic?.audio ? (
+          <AudioPlayer audioUrl={phonetic.audio} />
+        ) : (
+          <Typography variant="body2" color="grey.600" align="center">
+            No audio available
+          </Typography>
+        )}
       </CardContent>
     </Card>
   );

@@ -48,6 +48,20 @@ export interface GraphQLCreateWordInput {
   word: Scalars['String']['input'];
 }
 
+export interface GraphQLDefinition {
+  __typename?: 'Definition';
+  definition: Scalars['String']['output'];
+  example?: Maybe<Scalars['String']['output']>;
+}
+
+export interface GraphQLMeaning {
+  __typename?: 'Meaning';
+  antonyms?: Maybe<Array<Scalars['String']['output']>>;
+  definitions: Array<GraphQLDefinition>;
+  partOfSpeech: Scalars['String']['output'];
+  synonyms?: Maybe<Array<Scalars['String']['output']>>;
+}
+
 export interface GraphQLMutation {
   __typename?: 'Mutation';
   authenticateUser?: Maybe<GraphQLAuthPayload>;
@@ -97,8 +111,6 @@ export interface GraphQLMutationResponse {
 export interface GraphQLPhonetic {
   __typename?: 'Phonetic';
   audio: Scalars['String']['output'];
-  phoneticId: Scalars['ID']['output'];
-  sourceUrl?: Maybe<Scalars['String']['output']>;
   text: Scalars['String']['output'];
 }
 
@@ -149,6 +161,7 @@ export interface GraphQLUserWordHistory {
 export interface GraphQLWord {
   __typename?: 'Word';
   isFavorite: Scalars['Boolean']['output'];
+  meanings: Array<GraphQLMeaning>;
   phonetics: Array<GraphQLPhonetic>;
   status: GraphQLWordStatus;
   word: Scalars['String']['output'];
@@ -170,8 +183,8 @@ export enum GraphQLWordStatus {
 
 export interface GraphQLWordsInput {
   isFavorite?: InputMaybe<Scalars['Boolean']['input']>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+  page?: InputMaybe<Scalars['PositiveInt']['input']>;
 }
 
 
@@ -256,10 +269,11 @@ export type GraphQLResolversTypes = {
   CreateWordInput: GraphQLCreateWordInput;
   Date: ResolverTypeWrapper<Scalars['Date']['output']>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
+  Definition: ResolverTypeWrapper<GraphQLDefinition>;
   EmailAddress: ResolverTypeWrapper<Scalars['EmailAddress']['output']>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
-  Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   JSONObject: ResolverTypeWrapper<Scalars['JSONObject']['output']>;
+  Meaning: ResolverTypeWrapper<GraphQLMeaning>;
   Mutation: ResolverTypeWrapper<{}>;
   MutationResponse: ResolverTypeWrapper<GraphQLResolversInterfaceTypes<GraphQLResolversTypes>['MutationResponse']>;
   NonEmptyString: ResolverTypeWrapper<Scalars['NonEmptyString']['output']>;
@@ -289,10 +303,11 @@ export type GraphQLResolversParentTypes = {
   CreateWordInput: GraphQLCreateWordInput;
   Date: Scalars['Date']['output'];
   DateTime: Scalars['DateTime']['output'];
+  Definition: GraphQLDefinition;
   EmailAddress: Scalars['EmailAddress']['output'];
   ID: Scalars['ID']['output'];
-  Int: Scalars['Int']['output'];
   JSONObject: Scalars['JSONObject']['output'];
+  Meaning: GraphQLMeaning;
   Mutation: {};
   MutationResponse: GraphQLResolversInterfaceTypes<GraphQLResolversParentTypes>['MutationResponse'];
   NonEmptyString: Scalars['NonEmptyString']['output'];
@@ -326,6 +341,12 @@ export interface GraphQLDateTimeScalarConfig extends GraphQLScalarTypeConfig<Gra
   name: 'DateTime';
 }
 
+export type GraphQLDefinitionResolvers<ContextType = any, ParentType extends GraphQLResolversParentTypes['Definition'] = GraphQLResolversParentTypes['Definition']> = {
+  definition?: Resolver<GraphQLResolversTypes['String'], ParentType, ContextType>;
+  example?: Resolver<Maybe<GraphQLResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export interface GraphQLEmailAddressScalarConfig extends GraphQLScalarTypeConfig<GraphQLResolversTypes['EmailAddress'], any> {
   name: 'EmailAddress';
 }
@@ -333,6 +354,14 @@ export interface GraphQLEmailAddressScalarConfig extends GraphQLScalarTypeConfig
 export interface GraphQLJsonObjectScalarConfig extends GraphQLScalarTypeConfig<GraphQLResolversTypes['JSONObject'], any> {
   name: 'JSONObject';
 }
+
+export type GraphQLMeaningResolvers<ContextType = any, ParentType extends GraphQLResolversParentTypes['Meaning'] = GraphQLResolversParentTypes['Meaning']> = {
+  antonyms?: Resolver<Maybe<Array<GraphQLResolversTypes['String']>>, ParentType, ContextType>;
+  definitions?: Resolver<Array<GraphQLResolversTypes['Definition']>, ParentType, ContextType>;
+  partOfSpeech?: Resolver<GraphQLResolversTypes['String'], ParentType, ContextType>;
+  synonyms?: Resolver<Maybe<Array<GraphQLResolversTypes['String']>>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
 
 export type GraphQLMutationResolvers<ContextType = any, ParentType extends GraphQLResolversParentTypes['Mutation'] = GraphQLResolversParentTypes['Mutation']> = {
   authenticateUser?: Resolver<Maybe<GraphQLResolversTypes['AuthPayload']>, ParentType, ContextType, RequireFields<GraphQLMutationAuthenticateUserArgs, 'input'>>;
@@ -364,8 +393,6 @@ export interface GraphQLNonPositiveIntScalarConfig extends GraphQLScalarTypeConf
 
 export type GraphQLPhoneticResolvers<ContextType = any, ParentType extends GraphQLResolversParentTypes['Phonetic'] = GraphQLResolversParentTypes['Phonetic']> = {
   audio?: Resolver<GraphQLResolversTypes['String'], ParentType, ContextType>;
-  phoneticId?: Resolver<GraphQLResolversTypes['ID'], ParentType, ContextType>;
-  sourceUrl?: Resolver<Maybe<GraphQLResolversTypes['String']>, ParentType, ContextType>;
   text?: Resolver<GraphQLResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -403,6 +430,7 @@ export type GraphQLUserWordHistoryResolvers<ContextType = any, ParentType extend
 
 export type GraphQLWordResolvers<ContextType = any, ParentType extends GraphQLResolversParentTypes['Word'] = GraphQLResolversParentTypes['Word']> = {
   isFavorite?: Resolver<GraphQLResolversTypes['Boolean'], ParentType, ContextType>;
+  meanings?: Resolver<Array<GraphQLResolversTypes['Meaning']>, ParentType, ContextType>;
   phonetics?: Resolver<Array<GraphQLResolversTypes['Phonetic']>, ParentType, ContextType>;
   status?: Resolver<GraphQLResolversTypes['WordStatus'], ParentType, ContextType>;
   word?: Resolver<GraphQLResolversTypes['String'], ParentType, ContextType>;
@@ -422,8 +450,10 @@ export type GraphQLResolvers<ContextType = any> = {
   AuthPayload?: GraphQLAuthPayloadResolvers<ContextType>;
   Date?: GraphQLScalarType;
   DateTime?: GraphQLScalarType;
+  Definition?: GraphQLDefinitionResolvers<ContextType>;
   EmailAddress?: GraphQLScalarType;
   JSONObject?: GraphQLScalarType;
+  Meaning?: GraphQLMeaningResolvers<ContextType>;
   Mutation?: GraphQLMutationResolvers<ContextType>;
   MutationResponse?: GraphQLMutationResponseResolvers<ContextType>;
   NonEmptyString?: GraphQLScalarType;
