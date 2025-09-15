@@ -12,7 +12,7 @@ export default function Word() {
   const [selectedWordId, setSelectedWordId] = useState<string | null>(null);
 
   return (
-    <Container sx={{ mt: 12 }}>
+    <Container sx={{ mt: 4 }}>
       <Grid container spacing={12}>
         <Grid size={{ xs: 12, md: 4 }}>
           {selectedWordId && (

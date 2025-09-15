@@ -25,8 +25,6 @@ export const wordResolvers: GraphQLResolvers = {
         take: pageSize,
       });
 
-      console.log("Words: ", words);
-
       const formattedWords: GraphQLWord[] = await pMap(
         words,
         async (word: Word) => getEnhancedGraphQLWord({ wordId: word.wordId })

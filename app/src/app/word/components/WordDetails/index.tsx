@@ -33,7 +33,9 @@ export function WordDetails({ wordId }: Pick<GraphQLWord, "wordId">) {
       <Box mb={4} />
       <MeaningSection>
         <Typography variant="body1">
-          {`(${currentMeaning.partOfSpeech}) - ${currentMeaning.definitions[0].definition}.`}
+          {currentMeaning
+            ? `(${currentMeaning.partOfSpeech}) - ${currentMeaning.definitions[0].definition}.`
+            : "No meanings available for this word."}
         </Typography>
       </MeaningSection>
       <NavigationButtons

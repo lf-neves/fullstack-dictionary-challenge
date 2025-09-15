@@ -193,6 +193,13 @@ export type GraphQLAuthenticateUserMutationVariables = Exact<{
 
 export type GraphQLAuthenticateUserMutation = { __typename?: 'Mutation', authenticateUser?: { __typename?: 'AuthPayload', token: string, user: { __typename?: 'User', userId: string } } | null };
 
+export type GraphQLCreateUserMutationVariables = Exact<{
+  input: GraphQLCreateUserInput;
+}>;
+
+
+export type GraphQLCreateUserMutation = { __typename?: 'Mutation', createUser?: { __typename?: 'AuthPayload', token: string } | null };
+
 export type GraphQLMeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -253,6 +260,27 @@ export const useAuthenticateUserMutation = <
       {
     mutationKey: ['AuthenticateUser'],
     mutationFn: (variables?: GraphQLAuthenticateUserMutationVariables) => gqlFetcher<GraphQLAuthenticateUserMutation, GraphQLAuthenticateUserMutationVariables>(AuthenticateUserDocument, variables)(),
+    ...options
+  }
+    )};
+
+export const CreateUserDocument = `
+    mutation CreateUser($input: CreateUserInput!) {
+  createUser(input: $input) {
+    token
+  }
+}
+    `;
+
+export const useCreateUserMutation = <
+      TError = ReactQueryError,
+      TContext = unknown
+    >(options?: UseMutationOptions<GraphQLCreateUserMutation, TError, GraphQLCreateUserMutationVariables, TContext>) => {
+    
+    return useMutation<GraphQLCreateUserMutation, TError, GraphQLCreateUserMutationVariables, TContext>(
+      {
+    mutationKey: ['CreateUser'],
+    mutationFn: (variables?: GraphQLCreateUserMutationVariables) => gqlFetcher<GraphQLCreateUserMutation, GraphQLCreateUserMutationVariables>(CreateUserDocument, variables)(),
     ...options
   }
     )};
@@ -507,6 +535,7 @@ export const namedOperations = {
   },
   Mutation: {
     AuthenticateUser: 'AuthenticateUser',
+    CreateUser: 'CreateUser',
     TrackWordVisitHistory: 'TrackWordVisitHistory',
     UpdateWord: 'UpdateWord'
   }

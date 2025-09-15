@@ -20,7 +20,10 @@ export const userResolvers: GraphQLResolvers = {
         throw new Error("User not found.");
       }
 
-      return userWithHistory;
+      return {
+        ...userWithHistory,
+        userWordHistory: userWithHistory.history,
+      };
     },
   },
 
