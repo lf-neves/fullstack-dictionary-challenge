@@ -1,12 +1,19 @@
 import {
   GraphQLWord,
+  GraphQLWordsQuery,
+  GraphQLWordsQueryVariables,
   useSuspenseWordsQuery,
   useTrackWordVisitHistoryMutation,
+  WordsDocument,
 } from "@/typings/graphql/codegen/graphqlOperations";
 import { Box, Button, Grid, Typography } from "@mui/material";
-import { useQueryClient } from "@tanstack/react-query";
-import { useCallback, useState } from "react";
+import {
+  useQueryClient,
+  useSuspenseInfiniteQuery,
+} from "@tanstack/react-query";
+import { useCallback } from "react";
 import { useTabsContext } from "./TabsPanel";
+import { gqlFetcher } from "@/app/api/client/graphql";
 
 interface WordListProps {
   setSelectedWordId: (wordId: string) => void;
@@ -17,8 +24,6 @@ export function WordList({ setSelectedWordId }: WordListProps) {
   const queryClient = useQueryClient();
   const { mutateAsync: trackWordVisitHistory } =
     useTrackWordVisitHistoryMutation();
-
-  const [allWordsLimit, setAllWordsLimit] = useState(20);
 
   const handleSelectWord = useCallback(
     async ({ wordId }: Pick<GraphQLWord, "wordId">) => {
@@ -37,17 +42,37 @@ export function WordList({ setSelectedWordId }: WordListProps) {
     [queryClient, setSelectedWordId, trackWordVisitHistory]
   );
 
-  const { data: allWordsData } = useSuspenseWordsQuery(
-    {
-      input: {
-        limit: allWordsLimit,
-        page: allWordsLimit / 20,
-      },
+  const fetchWords = useCallback(
+    async ({ pageParam = 1 }: { pageParam?: number } = { pageParam: 1 }) => {
+      const graphqlWordsFetcher = gqlFetcher<
+        GraphQLWordsQuery,
+        GraphQLWordsQueryVariables
+      >(WordsDocument, {
+        input: { page: pageParam, limit: 20 },
+      });
+
+      const response = await graphqlWordsFetcher();
+
+      return {
+        data: response?.words || [],
+        nextCursor: pageParam + 1,
+      };
     },
-    {
-      queryKey: ["allWordsQuery"],
-    }
+    []
   );
+
+  const {
+    data: allWordsData,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useSuspenseInfiniteQuery({
+    queryKey: ["projects"],
+    queryFn: fetchWords,
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) =>
+      lastPage.data.length === 0 ? undefined : lastPage.nextCursor,
+  });
 
   const { data: favoriteWordsData } = useSuspenseWordsQuery(
     {
@@ -64,8 +89,8 @@ export function WordList({ setSelectedWordId }: WordListProps) {
     "all" | "favorites",
     Pick<GraphQLWord, "wordId" | "word">[]
   > = {
-    all: allWordsData.words || [],
-    favorites: favoriteWordsData.words || [],
+    all: allWordsData?.pages.flatMap((page) => page.data) || [],
+    favorites: favoriteWordsData?.words || [],
   };
 
   const words = listOfWordsBySelectedTabMap[currentTab];
@@ -101,9 +126,10 @@ export function WordList({ setSelectedWordId }: WordListProps) {
       {currentTab === "all" ? (
         <Button
           variant="outlined"
+          disabled={isFetchingNextPage || !hasNextPage}
           style={{ marginBottom: 2 }}
           onClick={async () => {
-            setAllWordsLimit((prev) => prev + 20);
+            await fetchNextPage();
           }}
         >
           Load More

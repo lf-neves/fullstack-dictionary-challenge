@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test:e2e": "playwright test --project=chromium"
   },
   "dependencies": {
     "@apollo/client": "^4.0.4",
@@ -20,13 +21,17 @@
     "next": "15.3.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-hook-form": "^7.62.0"
+    "react-hook-form": "^7.62.0",
+    "testing": "workspace:^",
+    "database": "workspace:^",
+    "lambda": "workspace:^"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@graphql-codegen/cli": "5.0.7",
     "@graphql-codegen/typescript": "4.1.6",
     "@graphql-codegen/typescript-operations": "^4.6.1",
+    "@playwright/test": "^1.55.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

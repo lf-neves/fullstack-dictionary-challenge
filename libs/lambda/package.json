@@ -16,6 +16,7 @@
     "p-map": "^7.0.3"
   },
   "devDependencies": {
+    "@faker-js/faker": "^9.9.0",
     "@types/lodash": "^4.17.19",
     "@types/node": "^24.3.0"
   }

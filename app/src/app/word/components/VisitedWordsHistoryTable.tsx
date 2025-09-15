@@ -6,7 +6,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Typography } from "@mui/material";
+import { Skeleton, Typography } from "@mui/material";
 import { useSuspenseUserVisitedWordsHistoryQuery } from "@/typings/graphql/codegen/graphqlOperations";
 import { Suspense } from "react";
 
@@ -62,10 +62,14 @@ export function VisitedWordsHistoryTable() {
           <Suspense
             fallback={
               <TableRow>
-                <TableCell colSpan={4} align="center">
-                  <Typography variant="body1" color="textSecondary">
-                    Loading...
-                  </Typography>
+                <TableCell>
+                  <Skeleton />
+                </TableCell>
+                <TableCell align="right">
+                  <Skeleton />
+                </TableCell>
+                <TableCell align="right">
+                  <Skeleton />
                 </TableCell>
               </TableRow>
             }

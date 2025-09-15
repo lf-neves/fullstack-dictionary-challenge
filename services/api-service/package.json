@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "API_ENV=test jest --passWithNoTests",
+    "test:e2e": "API_ENV=test pnpm tsx ./src/scripts/setupE2eTestsApi.ts && API_ENV=test pnpm start",
     "start": "pnpm run generate && nodemon --exec tsx src/index.ts",
     "generate": "graphql-codegen"
   },

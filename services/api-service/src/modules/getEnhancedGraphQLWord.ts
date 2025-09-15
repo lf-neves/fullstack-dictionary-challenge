@@ -46,7 +46,18 @@ export async function getEnhancedGraphQLWord({
     const response = await fetch(DICTIONARY_API_URL + `/${word.word}`);
 
     if (!response.ok) {
-      return {} as GraphQLWord;
+      logger.info(
+        "Dictionary API responded with status %d for Word[%s].",
+        response.status,
+        wordId
+      );
+
+      return {
+        ...word,
+        status: word.status as GraphQLWordStatus,
+        phonetics: [],
+        meanings: [],
+      };
     }
 
     const data = await response.json();
@@ -90,8 +101,6 @@ export async function getEnhancedGraphQLWord({
         return [];
       }
     );
-
-    console.log(word);
 
     return {
       ...word,
