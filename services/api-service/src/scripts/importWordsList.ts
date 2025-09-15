@@ -1,11 +1,49 @@
 import { prismaClient } from "database";
 import { logger } from "lambda";
+import assert from "node:assert";
 
-async function importWordsList() {
+export async function importWordsList() {
+  assert(
+    process.env.API_ENV === "test",
+    "This script can only be run in the test environment."
+  );
+
   logger.info("Starting words list import...");
 
   try {
-    const words = ["car", "bike", "bus"];
+    // For testing purposes, we'll use a small static list of words (30 words).
+    const words = [
+      "car",
+      "bike",
+      "bus",
+      "train",
+      "airplane",
+      "boat",
+      "ship",
+      "subway",
+      "tram",
+      "scooter",
+      "motorcycle",
+      "helicopter",
+      "rocket",
+      "spaceship",
+      "yacht",
+      "ferry",
+      "canoe",
+      "kayak",
+      "skateboard",
+      "rollerblades",
+      "segway",
+      "hoverboard",
+      "trolley",
+      "rickshaw",
+      "gondola",
+      "zeppelin",
+      "blimp",
+      "hot air balloon",
+      "monorail",
+      "cable car",
+    ];
 
     logger.info("Inserting %d words into the database...", words.length);
 
@@ -24,9 +62,7 @@ async function importWordsList() {
       words.length
     );
   } catch (error) {
-    console.error("Error fetching words list from API: %O", error);
-    throw new Error(`Failed to fetch words list from API.`);
+    console.error("Error importing words into database: %O", error);
+    throw new Error(`Failed to import words into database.`);
   }
 }
-
-await importWordsList();

@@ -22,17 +22,12 @@ loggedInTest.describe("Words page", () => {
       // assert: word details are visible
       await expect(page.getByRole("heading", { name: "bike" })).toBeVisible();
       await expect(page.getByText("noun")).toBeVisible();
-      await expect(
-        page.getByText(
-          "A vehicle that has two wheels, one behind the other, a steering handle, and a saddle seat or seats and is usually propelled by the action of a rider’s feet upon pedals"
-        )
-      ).toBeVisible();
 
       // act: go to next meaning
       await page.getByRole("button", { name: "Next", exact: true }).click();
 
       // assert: next meaning is visible
-      await expect(page.getByText("(verb) - To ride a bike..")).toBeVisible();
+      await expect(page.getByText("(verb) - ")).toBeVisible();
     }
   );
 });

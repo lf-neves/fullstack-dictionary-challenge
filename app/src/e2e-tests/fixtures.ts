@@ -1,6 +1,6 @@
 import { CreateUserDocument } from "@/typings/graphql/codegen/graphqlOperations";
 import { Page, test as baseTest } from "@playwright/test";
-import { faker } from "lambda";
+import { faker, logger } from "lambda";
 
 type AuthFixtures = {
   authPage: Page;
@@ -35,7 +35,11 @@ const loggedInTest = baseTest.extend<AuthFixtures>({
 
     const json = await response.json();
 
-    console.log("Login response:", json);
+    logger.info("User created for e2e tests: %O", {
+      email: newUserData.email,
+      firstName: newUserData.firstName,
+      lastName: newUserData.lastName,
+    });
 
     const token = json.data.createUser?.token;
 

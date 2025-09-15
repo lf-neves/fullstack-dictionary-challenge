@@ -42,23 +42,24 @@ export function WordList({ setSelectedWordId }: WordListProps) {
     [queryClient, setSelectedWordId, trackWordVisitHistory]
   );
 
-  const fetchWords = async (
-    { pageParam = 1 }: { pageParam?: number } = { pageParam: 1 }
-  ) => {
-    const graphqlWordsFetcher = gqlFetcher<
-      GraphQLWordsQuery,
-      GraphQLWordsQueryVariables
-    >(WordsDocument, {
-      input: { page: pageParam, limit: 20 },
-    });
+  const fetchWords = useCallback(
+    async ({ pageParam = 1 }: { pageParam?: number } = { pageParam: 1 }) => {
+      const graphqlWordsFetcher = gqlFetcher<
+        GraphQLWordsQuery,
+        GraphQLWordsQueryVariables
+      >(WordsDocument, {
+        input: { page: pageParam, limit: 20 },
+      });
 
-    const response = await graphqlWordsFetcher();
+      const response = await graphqlWordsFetcher();
 
-    return {
-      data: response?.words || [],
-      nextCursor: pageParam + 20,
-    };
-  };
+      return {
+        data: response?.words || [],
+        nextCursor: pageParam + 1,
+      };
+    },
+    []
+  );
 
   const {
     data: allWordsData,
