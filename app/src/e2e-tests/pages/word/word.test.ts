@@ -14,7 +14,7 @@ loggedInTest.describe("Words page", () => {
       await expect(page.getByRole("tab", { name: "Word list" })).toBeVisible();
 
       // act: select a word
-      await page.getByRole("button", { name: "bike" }).click();
+      await wordPage.selectWord("bike");
 
       // assert: visited words history includes selected word
       await expect(page.getByRole("rowheader", { name: "bike" })).toBeVisible();
@@ -35,11 +35,4 @@ loggedInTest.describe("Words page", () => {
       await expect(page.getByText("(verb) - To ride a bike..")).toBeVisible();
     }
   );
-
-  // loggedInTest("allows favoring and unfavorite a word", async ({ page }) => {
-  //   const wordPage = new WordPage(page);
-
-  //   await wordPage.navigateToPage();
-  //   await wordPage.favoriteWord("example");
-  // });
 });

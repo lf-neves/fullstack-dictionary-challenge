@@ -5,10 +5,16 @@ export class WordPage extends BasePage {
     await this.page.goto("/word");
   }
 
+  async selectWord(word: string) {
+    await this.page.getByRole("button", { name: word }).click();
+  }
+
   async favoriteWord(word: string) {
+    await this.selectWord(word);
+
     await this.page
-      .getByRole("button", { name: `favorite ${word}` })
-      .first()
+      .getByRole("heading", { name: word })
+      .getByRole("button")
       .click();
   }
 }
