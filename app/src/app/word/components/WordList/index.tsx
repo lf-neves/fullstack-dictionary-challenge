@@ -12,8 +12,9 @@ import {
   useSuspenseInfiniteQuery,
 } from "@tanstack/react-query";
 import { useCallback } from "react";
-import { useTabsContext } from "./TabsPanel";
+
 import { gqlFetcher } from "@/app/api/client/graphql";
+import { useTabsContext } from "../TabsPanel";
 
 interface WordListProps {
   setSelectedWordId: (wordId: string) => void;

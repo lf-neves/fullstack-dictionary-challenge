@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test:e2e": "playwright test --project=chromium"
+    "test:e2e": "playwright test --project=chromium",
+    "test:unit": "API_ENV=\"test\" jest"
   },
   "dependencies": {
     "@apollo/client": "^4.0.4",
@@ -18,25 +19,40 @@
     "@mui/icons-material": "^7.3.2",
     "@mui/material": "^7.3.2",
     "@tanstack/react-query": "^5.86.0",
+    "database": "workspace:^",
+    "graphql": "^16.11.0",
+    "lambda": "workspace:^",
     "next": "15.3.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.62.0",
-    "testing": "workspace:^",
-    "database": "workspace:^",
-    "lambda": "workspace:^"
+    "rxjs": "^7.8.2",
+    "testing": "workspace:^"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.28.3",
+    "@babel/preset-react": "^7.27.1",
+    "@babel/preset-typescript": "^7.27.1",
     "@eslint/eslintrc": "^3",
     "@graphql-codegen/cli": "5.0.7",
     "@graphql-codegen/typescript": "4.1.6",
     "@graphql-codegen/typescript-operations": "^4.6.1",
     "@playwright/test": "^1.55.0",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.8.0",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/jest": "^30.0.0",
     "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "babel-jest": "^30.1.2",
     "eslint": "^9",
     "eslint-config-next": "15.3.4",
-    "typescript": "^5"
+    "jest": "^30.0.4",
+    "jest-environment-jsdom": "^30.1.2",
+    "ts-jest": "^29.4.0",
+    "typescript": "^5",
+    "whatwg-fetch": "^3.6.20"
   }
 }
